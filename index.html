@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-  <meta name="theme-color" content="#f7f2e8">
+  <meta name="theme-color" content="#f7f2e8" id="meta-theme">
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
@@ -11,10 +11,13 @@
   <meta name="description" content="Proyectos web de zaswear">
   <title>ZasProjects · zaswear</title>
   <link rel="manifest" href="manifest.json">
+  <!-- Favicon: hoja SVG personalizada -->
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><circle cx='16' cy='16' r='15' fill='%23f7f2e8'/><path d='M10 24C13 16 21 10 24 10 18 14 12 19 10 24Z' fill='%234a7050'/><line x1='16' y1='24' x2='17' y2='11' stroke='%234a7050' stroke-width='1.5' stroke-linecap='round'/></svg>">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,400&family=Space+Mono:wght@400;700&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
 
   <style>
+    /* ===== LIGHT (default) ===== */
     :root {
       --cream:         #f7f2e8;
       --cream-soft:    #f0e9d8;
@@ -25,16 +28,48 @@
       --ink-faint:     #a09080;
       --green:         #4a7050;
       --green-mid:     #6a9472;
-      --green-pale:    #c8ddc8;
       --gold:          #b89040;
       --blue:          #6080a0;
       --terra:         #b86040;
       --mauve:         #8060a0;
       --teal:          #408080;
+      --dots-opacity:  0.55;
+      --season-accent: var(--green);
     }
 
+    /* ===== DARK MODE ===== */
+    [data-theme="dark"] {
+      --cream:         #1c1916;
+      --cream-soft:    #231f1a;
+      --cream-card:    #2c2820;
+      --cream-border:  #3c3828;
+      --ink:           #e8dfc8;
+      --ink-mid:       #a09070;
+      --ink-faint:     #685e50;
+      --green:         #6a9468;
+      --green-mid:     #8ab488;
+      --dots-opacity:  0.18;
+    }
+
+    /* ===== SEASONAL ACCENTS ===== */
+    [data-season="spring"] { --season-accent: #c07888; }
+    [data-season="summer"] { --season-accent: #b89040; }
+    [data-season="autumn"] { --season-accent: #c05030; --cream: #f5ede0; }
+    [data-season="winter"] { --season-accent: #708090; --cream: #f0f2f8; --green: #506070; --green-mid: #708090; }
+
+    [data-theme="dark"][data-season="spring"] { --season-accent: #d090a0; }
+    [data-theme="dark"][data-season="autumn"]  { --season-accent: #d07050; }
+    [data-theme="dark"][data-season="winter"]  { --season-accent: #90a8c0; }
+
+    /* ===== RESET ===== */
     * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 
+    /* ===== SMOOTH THEME TRANSITIONS ===== */
+    body, .card, .ctrl-btn, header, footer, .rule, #install-banner, #install-btn {
+      transition: background-color 0.5s ease, color 0.5s ease, border-color 0.4s ease, box-shadow 0.4s ease;
+    }
+
+    /* ===== BODY ===== */
     body {
       background-color: var(--cream);
       color: var(--ink);
@@ -43,19 +78,20 @@
       overflow-x: hidden;
     }
 
-    /* === BACKGROUND: dot grid (notebook) === */
+    /* Dot grid — cuaderno Leuchtturm */
     body::before {
       content: '';
       position: fixed;
       inset: 0;
       background-image: radial-gradient(circle, var(--cream-border) 1.2px, transparent 1.2px);
       background-size: 22px 22px;
-      opacity: 0.55;
+      opacity: var(--dots-opacity);
       pointer-events: none;
       z-index: 0;
+      transition: opacity 0.5s ease;
     }
 
-    /* === BACKGROUND: botanical glows === */
+    /* Botanical glows */
     body::after {
       content: '';
       position: fixed;
@@ -68,28 +104,28 @@
       z-index: 0;
     }
 
-    /* === BOTANICAL CORNERS (SVG inline, fixed) === */
-    .leaf-tl {
+    /* ===== CANVAS (partículas estacionales) ===== */
+    #particle-canvas {
       position: fixed;
-      top: -12px; left: -12px;
-      width: 170px;
-      opacity: 0.16;
+      inset: 0;
       pointer-events: none;
-      z-index: 0;
-      transform: rotate(8deg);
+      z-index: 1;
     }
 
-    .leaf-br {
+    /* ===== BOTANICAL CORNERS ===== */
+    .leaf-tl, .leaf-br {
       position: fixed;
-      bottom: -12px; right: -12px;
-      width: 150px;
-      opacity: 0.13;
       pointer-events: none;
       z-index: 0;
-      transform: rotate(-168deg);
+      transition: opacity 0.5s ease;
     }
+    .leaf-tl { top: -12px; left: -12px; width: 170px; opacity: 0.16; transform: rotate(8deg); }
+    .leaf-br { bottom: -12px; right: -12px; width: 150px; opacity: 0.13; transform: rotate(-168deg); }
 
-    /* === CONSTELLATION (NASA/space ref, top-right) === */
+    [data-theme="dark"] .leaf-tl { opacity: 0.22; filter: brightness(1.6); }
+    [data-theme="dark"] .leaf-br { opacity: 0.18; filter: brightness(1.6); }
+
+    /* ===== CONSTELLATION ===== */
     .stars {
       position: fixed;
       top: 0; right: 0;
@@ -97,20 +133,44 @@
       opacity: 0.14;
       pointer-events: none;
       z-index: 0;
+      transition: opacity 0.5s ease;
     }
+    [data-theme="dark"] .stars { opacity: 0.3; }
 
-    /* === LAYOUT === */
+    /* ===== WRAPPER ===== */
     .wrapper {
       position: relative;
-      z-index: 1;
+      z-index: 2;
       max-width: 480px;
       margin: 0 auto;
     }
 
-    /* === HEADER === */
-    header {
-      padding: 50px 24px 18px;
+    /* ===== CONTROLS (modo oscuro + sonido) ===== */
+    .controls {
+      position: fixed;
+      top: 16px; right: 16px;
+      display: flex;
+      gap: 8px;
+      z-index: 10;
     }
+
+    .ctrl-btn {
+      width: 36px; height: 36px;
+      border-radius: 50%;
+      border: 1px solid var(--cream-border);
+      background: var(--cream-soft);
+      cursor: pointer;
+      font-size: 15px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 2px 8px rgba(44,36,25,0.08);
+      user-select: none;
+    }
+    .ctrl-btn:active { transform: scale(0.88); }
+
+    /* ===== HEADER ===== */
+    header { padding: 50px 24px 18px; }
 
     .logo-line {
       display: flex;
@@ -127,6 +187,7 @@
       background: var(--green);
       animation: blink 2.5s ease infinite;
       flex-shrink: 0;
+      transition: background-color 0.5s;
     }
 
     .logo-text {
@@ -135,6 +196,7 @@
       letter-spacing: 0.25em;
       text-transform: uppercase;
       color: var(--green);
+      transition: color 0.5s;
     }
 
     h1 {
@@ -151,7 +213,8 @@
     h1 em {
       font-style: italic;
       font-weight: 700;
-      color: var(--green);
+      color: var(--season-accent);
+      transition: color 0.5s;
     }
 
     .subtitle {
@@ -164,10 +227,8 @@
       opacity: 0;
       animation: fadeUp 0.5s ease 0.3s forwards;
     }
+    .subtitle b { color: var(--green-mid); font-weight: 400; transition: color 0.5s; }
 
-    .subtitle b { color: var(--green-mid); font-weight: 400; }
-
-    /* tiny gaming easter egg — visible but quiet */
     .status-bar {
       font-family: 'Space Mono', monospace;
       font-size: 9px;
@@ -177,9 +238,10 @@
       opacity: 0;
       animation: fadeUp 0.5s ease 0.4s forwards;
       user-select: none;
+      transition: color 0.5s;
     }
 
-    /* horizontal rule — like a pressed-flower divider */
+    /* ===== DIVIDER ===== */
     .rule {
       margin: 22px 24px 0;
       height: 1px;
@@ -188,7 +250,6 @@
       animation: fadeIn 0.6s ease 0.5s forwards;
       position: relative;
     }
-
     .rule::after {
       content: '✦';
       position: absolute;
@@ -198,9 +259,10 @@
       color: var(--cream-border);
       background: var(--cream);
       padding: 0 6px;
+      transition: color 0.5s, background-color 0.5s;
     }
 
-    /* === GRID === */
+    /* ===== GRID ===== */
     .grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
@@ -225,7 +287,12 @@
       box-shadow: 0 2px 8px rgba(44,36,25,0.07), inset 0 1px 0 rgba(255,255,255,0.55);
       opacity: 0;
       transform: translateY(12px);
-      transition: border-color 0.2s, transform 0.18s ease, box-shadow 0.2s;
+      transition:
+        background-color 0.5s ease,
+        color 0.5s ease,
+        border-color 0.25s ease,
+        transform 0.18s ease,
+        box-shadow 0.25s ease;
     }
 
     /* top accent stripe */
@@ -240,7 +307,7 @@
       transition: opacity 0.2s, left 0.2s, right 0.2s;
     }
 
-    /* warm glow orb */
+    /* glow orb */
     .card::before {
       content: '';
       position: absolute;
@@ -260,14 +327,21 @@
     .card:nth-child(5) { animation: fadeUp 0.4s ease 0.76s forwards; }
     .card:nth-child(6) { animation: fadeUp 0.4s ease 0.82s forwards; }
 
-    .card:active {
-      transform: scale(0.965) translateY(0);
-      border-color: var(--card-color, var(--green));
-      box-shadow: 0 4px 20px rgba(44,36,25,0.12);
-    }
-
+    .card:active { transform: scale(0.965); border-color: var(--card-color, var(--green)); }
     .card:active::after  { opacity: 1; left: 0; right: 0; }
     .card:active::before { opacity: 0.16; }
+
+    /* ===== WARP CLICK ANIMATION ===== */
+    @keyframes warp {
+      0%   { transform: scale(1);    filter: brightness(1);    opacity: 1; }
+      35%  { transform: scale(0.94); filter: brightness(1.45); opacity: 1; }
+      65%  { transform: scale(1.03); filter: brightness(0.85); opacity: 1; }
+      100% { transform: scale(1);    filter: brightness(1);    opacity: 0.6; }
+    }
+    .card.warping {
+      animation: warp 0.32s ease forwards !important;
+      pointer-events: none;
+    }
 
     .card-num {
       font-family: 'Space Mono', monospace;
@@ -276,21 +350,15 @@
       letter-spacing: 0.1em;
       opacity: 0.75;
     }
-
-    .card-icon {
-      font-size: 26px;
-      line-height: 1;
-      margin-top: 6px;
-    }
-
+    .card-icon { font-size: 26px; line-height: 1; margin-top: 6px; }
     .card-name {
       font-family: 'Playfair Display', serif;
       font-size: 14.5px;
       font-weight: 700;
       line-height: 1.2;
       color: var(--ink);
+      transition: color 0.5s;
     }
-
     .card-tag {
       font-family: 'Space Mono', monospace;
       font-size: 8px;
@@ -299,7 +367,6 @@
       letter-spacing: 0.12em;
       margin-top: 4px;
     }
-
     .card-arrow {
       position: absolute;
       bottom: 12px; right: 12px;
@@ -314,82 +381,54 @@
       color: var(--card-color, var(--green));
       transition: opacity 0.2s;
     }
-
     .card:active .card-arrow { opacity: 1; }
 
-    .badge {
-      position: absolute;
-      top: 9px; right: 9px;
-      font-family: 'Space Mono', monospace;
-      font-size: 7px;
-      letter-spacing: 0.08em;
-      padding: 2px 5px;
-      border-radius: 3px;
-      background: var(--cream-card);
-      color: var(--ink-faint);
-      border: 1px solid var(--cream-border);
-      text-transform: uppercase;
-    }
-
-    /* === FOOTER === */
+    /* ===== FOOTER ===== */
     footer {
       padding: 10px 24px 44px;
       opacity: 0;
       animation: fadeIn 0.6s ease 0.95s forwards;
     }
-
-    .footer-row {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      margin-bottom: 5px;
-    }
-
+    .footer-row { display: flex; align-items: center; gap: 8px; margin-bottom: 5px; }
     .pulse-dot {
       width: 5px; height: 5px;
       border-radius: 50%;
       background: var(--green);
       animation: blink 2.5s ease infinite;
       flex-shrink: 0;
+      transition: background-color 0.5s;
     }
-
     .footer-main {
       font-family: 'Space Mono', monospace;
       font-size: 9px;
       color: var(--ink-faint);
       letter-spacing: 0.12em;
     }
-
-    .footer-main a {
-      color: var(--green-mid);
-      text-decoration: none;
-    }
-
+    .footer-main a { color: var(--green-mid); text-decoration: none; transition: color 0.5s; }
     .footer-sub {
       font-family: 'Space Mono', monospace;
       font-size: 8px;
       color: var(--cream-border);
       letter-spacing: 0.10em;
       padding-left: 13px;
+      transition: color 0.5s;
     }
 
-    /* === ANIMATIONS === */
+    /* ===== KEYFRAMES ===== */
     @keyframes fadeUp {
       from { opacity: 0; transform: translateY(12px); }
       to   { opacity: 1; transform: translateY(0); }
     }
-
     @keyframes fadeIn {
       from { opacity: 0; }
       to   { opacity: 1; }
     }
-
     @keyframes blink {
       0%, 100% { opacity: 1;   transform: scale(1); }
       50%       { opacity: 0.3; transform: scale(0.6); }
     }
 
-    /* === INSTALL BANNER === */
+    /* ===== INSTALL BANNER ===== */
     #install-banner {
       display: none;
       position: fixed;
@@ -403,16 +442,8 @@
       gap: 12px;
       box-shadow: 0 8px 24px rgba(44,36,25,0.13);
     }
-
     #install-banner.show { display: flex; }
-
-    #install-banner p {
-      flex: 1;
-      font-size: 13px;
-      line-height: 1.4;
-      color: var(--ink);
-    }
-
+    #install-banner p { flex: 1; font-size: 13px; line-height: 1.4; color: var(--ink); }
     #install-banner p span {
       display: block;
       font-size: 10px;
@@ -420,7 +451,6 @@
       font-family: 'Space Mono', monospace;
       margin-top: 2px;
     }
-
     #install-btn {
       background: var(--green);
       color: var(--cream);
@@ -433,7 +463,6 @@
       cursor: pointer;
       white-space: nowrap;
     }
-
     #dismiss-btn {
       background: none;
       border: none;
@@ -446,7 +475,9 @@
 </head>
 <body>
 
-<!-- Botanical corner — top left -->
+<canvas id="particle-canvas"></canvas>
+
+<!-- Hoja botánica — esquina superior izquierda -->
 <svg class="leaf-tl" viewBox="0 0 180 180" fill="none" xmlns="http://www.w3.org/2000/svg">
   <path d="M15 160 C45 90, 90 45, 165 15 C90 65, 65 90, 15 160Z" fill="#4a7050"/>
   <path d="M8 140 C35 85, 70 48, 148 10 C75 58, 48 85, 8 140Z" fill="#6a9472" opacity="0.6"/>
@@ -457,7 +488,7 @@
   <circle cx="48" cy="118" r="2" fill="#6a9472" opacity="0.3"/>
 </svg>
 
-<!-- Botanical corner — bottom right -->
+<!-- Hoja botánica — esquina inferior derecha -->
 <svg class="leaf-br" viewBox="0 0 180 180" fill="none" xmlns="http://www.w3.org/2000/svg">
   <path d="M15 160 C45 90, 90 45, 165 15 C90 65, 65 90, 15 160Z" fill="#4a7050"/>
   <path d="M8 140 C35 85, 70 48, 148 10 C75 58, 48 85, 8 140Z" fill="#6a9472" opacity="0.55"/>
@@ -466,7 +497,7 @@
   <circle cx="75" cy="90" r="3" fill="#4a7050" opacity="0.25"/>
 </svg>
 
-<!-- Constellation — top right (NASA / cosmos ref) -->
+<!-- Constelación — ref NASA/cosmos -->
 <svg class="stars" viewBox="0 0 210 210" fill="none" xmlns="http://www.w3.org/2000/svg">
   <circle cx="45"  cy="32"  r="1.8" fill="#b89040"/>
   <circle cx="88"  cy="14"  r="1.2" fill="#b89040"/>
@@ -491,6 +522,12 @@
   <line x1="62"  y1="78"  x2="108" y2="96"  stroke="#b89040" stroke-width="0.5" opacity="0.35"/>
 </svg>
 
+<!-- Controles: lluvia + tema -->
+<div class="controls">
+  <button class="ctrl-btn" id="sound-btn" title="Lluvia de Utrecht">🔇</button>
+  <button class="ctrl-btn" id="theme-btn" title="Modo oscuro">🌙</button>
+</div>
+
 <div class="wrapper">
 
   <header>
@@ -503,7 +540,7 @@
       // <b>recetas</b> · cosmos · código · <b>utrecht</b> · ovnis<br>
       &lt;web&gt; personal · vanilla js · github pages &lt;/web&gt;
     </div>
-    <div class="status-bar">◉ 6/6 proyectos cargados — press ↵ to explore</div>
+    <div class="status-bar" id="status-bar">◉ 6/6 proyectos cargados — press ↵ to explore</div>
   </header>
 
   <div class="rule"></div>
@@ -544,7 +581,7 @@
       </div>
       <div>
         <div class="card-name">NASA Explorer</div>
-        <div class="card-tag">🌌 space · api</div>
+        <div class="card-tag">🌌 live · space</div>
       </div>
       <div class="card-arrow">↗</div>
     </a>
@@ -557,21 +594,20 @@
       </div>
       <div>
         <div class="card-name">Salud360</div>
-        <div class="card-tag">🩺 health · app</div>
+        <div class="card-tag">🩺 live · health</div>
       </div>
       <div class="card-arrow">↗</div>
     </a>
 
-    <a class="card" href="https://github.com/zaswear/theartnoveau" target="_blank"
+    <a class="card" href="https://zaswear.github.io/theartnoveau/" target="_blank"
        style="--card-color:#8060a0">
-      <div class="badge">repo</div>
       <div>
         <div class="card-num">[05]</div>
         <div class="card-icon">🌸</div>
       </div>
       <div>
         <div class="card-name">Art Noveau</div>
-        <div class="card-tag">✦ art · diseño</div>
+        <div class="card-tag">✦ live · diseño</div>
       </div>
       <div class="card-arrow">↗</div>
     </a>
@@ -584,7 +620,7 @@
       </div>
       <div>
         <div class="card-name">Pursue Project</div>
-        <div class="card-tag">◎ uap · ovnis</div>
+        <div class="card-tag">◎ live · ovnis</div>
       </div>
       <div class="card-arrow">↗</div>
     </a>
@@ -604,7 +640,7 @@
 
 </div>
 
-<!-- Install banner -->
+<!-- Banner instalación PWA -->
 <div id="install-banner">
   <p>Añadir al escritorio<span>Instalar como app nativa</span></p>
   <button id="install-btn">Instalar</button>
@@ -612,26 +648,280 @@
 </div>
 
 <script>
-  let deferredPrompt;
+/* ===== DARK MODE ===== */
+const root = document.documentElement;
+const themeBtn = document.getElementById('theme-btn');
 
-  window.addEventListener('beforeinstallprompt', (e) => {
+(function initTheme() {
+  const saved = localStorage.getItem('zas-theme') || 'light';
+  if (saved === 'dark') root.setAttribute('data-theme', 'dark');
+  syncThemeBtn();
+  syncMetaTheme();
+})();
+
+themeBtn.addEventListener('click', () => {
+  const dark = root.getAttribute('data-theme') === 'dark';
+  root.setAttribute('data-theme', dark ? 'light' : 'dark');
+  localStorage.setItem('zas-theme', dark ? 'light' : 'dark');
+  syncThemeBtn();
+  syncMetaTheme();
+});
+
+function syncThemeBtn() {
+  const dark = root.getAttribute('data-theme') === 'dark';
+  themeBtn.textContent = dark ? '☀️' : '🌙';
+  themeBtn.title = dark ? 'Modo claro' : 'Modo oscuro';
+}
+
+function syncMetaTheme() {
+  const dark = root.getAttribute('data-theme') === 'dark';
+  document.getElementById('meta-theme').content = dark ? '#1c1916' : '#f7f2e8';
+}
+
+/* ===== SEASONAL THEME ===== */
+const SEASONS = {
+  spring: { months: [2,3,4], icon: '🌸', label: 'primavera' },
+  summer: { months: [5,6,7], icon: '☀️', label: 'verano' },
+  autumn: { months: [8,9,10], icon: '🍂', label: 'otoño' },
+  winter: { months: [11,0,1], icon: '❄️', label: 'invierno' },
+};
+
+function getSeason() {
+  const m = new Date().getMonth();
+  for (const [name, s] of Object.entries(SEASONS)) {
+    if (s.months.includes(m)) return name;
+  }
+  return 'spring';
+}
+
+const season = getSeason();
+root.setAttribute('data-season', season);
+document.getElementById('status-bar').textContent =
+  `◉ 6/6 proyectos · ${SEASONS[season].icon} ${SEASONS[season].label} · press ↵ to explore`;
+
+/* ===== PARTICLES ===== */
+const canvas = document.getElementById('particle-canvas');
+const pCtx = canvas.getContext('2d');
+
+function resizeCanvas() {
+  canvas.width  = window.innerWidth;
+  canvas.height = window.innerHeight;
+}
+resizeCanvas();
+window.addEventListener('resize', () => { resizeCanvas(); spawnParticles(); });
+
+const SEASON_CFG = {
+  spring: {
+    count: 18, shape: 'petal', upward: false,
+    colors: ['#e8b0c0','#f0c8d0','#d4a8b8','#f0d0dc','#c89ab0'],
+    speedYMin: 0.4, speedYMax: 1.0, swayAmp: 1.2,
+    sizeMin: 3, sizeMax: 7, opMin: 0.4, opMax: 0.75,
+  },
+  summer: {
+    count: 14, shape: 'dot', upward: true, blink: true,
+    colors: ['#c8a040','#d4b060','#e0c070','#b89030','#d4c080'],
+    speedYMin: -0.6, speedYMax: -0.2, swayAmp: 0.4,
+    sizeMin: 1.5, sizeMax: 4, opMin: 0.1, opMax: 0.8,
+  },
+  autumn: {
+    count: 20, shape: 'leaf', upward: false,
+    colors: ['#c47040','#b84030','#c89030','#904020','#d08040','#a06030'],
+    speedYMin: 0.7, speedYMax: 1.8, swayAmp: 1.5,
+    sizeMin: 5, sizeMax: 11, opMin: 0.45, opMax: 0.75,
+  },
+  winter: {
+    count: 28, shape: 'dot', upward: false,
+    colors: ['#d0d8e8','#e0e8f0','#c0ccdc','#b8c8d8','#e8eef8'],
+    speedYMin: 0.3, speedYMax: 0.9, swayAmp: 0.6,
+    sizeMin: 1.5, sizeMax: 4, opMin: 0.3, opMax: 0.7,
+  },
+};
+
+const cfg = SEASON_CFG[season];
+let particles = [];
+
+function rand(min, max) { return min + Math.random() * (max - min); }
+
+function makeParticle(initial) {
+  return {
+    x: Math.random() * canvas.width,
+    y: initial ? Math.random() * canvas.height
+               : (cfg.upward ? canvas.height + 10 : -12),
+    size:   rand(cfg.sizeMin, cfg.sizeMax),
+    speedY: rand(cfg.speedYMin, cfg.speedYMax),
+    speedX: rand(-0.4, 0.4),
+    sway:   Math.random() * Math.PI * 2,
+    swayS:  rand(0.008, 0.025),
+    angle:  Math.random() * Math.PI * 2,
+    angleS: rand(-0.035, 0.035),
+    color:  cfg.colors[Math.floor(Math.random() * cfg.colors.length)],
+    op:     rand(cfg.opMin, cfg.opMax),
+    blinkD: Math.random() > 0.5 ? 1 : -1,
+    blinkS: rand(0.004, 0.010),
+  };
+}
+
+function spawnParticles() {
+  particles = Array.from({ length: cfg.count }, (_, i) => makeParticle(true));
+}
+
+function updateParticle(p) {
+  p.sway += p.swayS;
+  p.x += p.speedX + Math.sin(p.sway) * cfg.swayAmp * 0.25;
+  p.y += p.speedY;
+  p.angle += p.angleS;
+
+  if (cfg.blink) {
+    p.op += p.blinkD * p.blinkS;
+    if (p.op > cfg.opMax) { p.op = cfg.opMax; p.blinkD = -1; }
+    if (p.op < cfg.opMin) { p.op = cfg.opMin; p.blinkD =  1; }
+  }
+
+  const gone = cfg.upward ? p.y < -12 : p.y > canvas.height + 12;
+  if (gone || p.x < -30 || p.x > canvas.width + 30) {
+    Object.assign(p, makeParticle(false));
+  }
+}
+
+function drawParticle(p) {
+  pCtx.save();
+  pCtx.globalAlpha = p.op;
+  pCtx.translate(p.x, p.y);
+  pCtx.rotate(p.angle);
+  pCtx.fillStyle = p.color;
+
+  if (cfg.shape === 'dot') {
+    pCtx.beginPath();
+    pCtx.arc(0, 0, p.size, 0, Math.PI * 2);
+    pCtx.fill();
+  } else if (cfg.shape === 'petal') {
+    pCtx.beginPath();
+    pCtx.ellipse(0, 0, p.size * 0.55, p.size, 0, 0, Math.PI * 2);
+    pCtx.fill();
+  } else if (cfg.shape === 'leaf') {
+    pCtx.beginPath();
+    pCtx.moveTo(0, -p.size);
+    pCtx.quadraticCurveTo( p.size * 0.75, 0, 0,  p.size);
+    pCtx.quadraticCurveTo(-p.size * 0.75, 0, 0, -p.size);
+    pCtx.fill();
+  }
+  pCtx.restore();
+}
+
+function animLoop() {
+  pCtx.clearRect(0, 0, canvas.width, canvas.height);
+  particles.forEach(p => { updateParticle(p); drawParticle(p); });
+  requestAnimationFrame(animLoop);
+}
+
+spawnParticles();
+animLoop();
+
+/* ===== CARD WARP ===== */
+document.querySelectorAll('.card').forEach(card => {
+  card.addEventListener('click', function(e) {
+    if (e.ctrlKey || e.metaKey || e.shiftKey) return;
     e.preventDefault();
-    deferredPrompt = e;
-    document.getElementById('install-banner').classList.add('show');
+    const href = this.href;
+    // window.open sincrónico dentro del click handler = no bloqueado por popup blocker
+    const win = window.open('about:blank', '_blank');
+    this.classList.add('warping');
+    setTimeout(() => {
+      if (win) win.location = href; else window.open(href, '_blank');
+      this.classList.remove('warping');
+    }, 320);
   });
+});
 
-  document.getElementById('install-btn').addEventListener('click', async () => {
-    if (deferredPrompt) {
-      deferredPrompt.prompt();
-      const { outcome } = await deferredPrompt.userChoice;
-      deferredPrompt = null;
-      document.getElementById('install-banner').classList.remove('show');
-    }
-  });
+/* ===== SONIDO AMBIENTE — lluvia de Utrecht (Web Audio API) ===== */
+const soundBtn = document.getElementById('sound-btn');
+let audioCtx = null;
+let rainNodes = null;
+let soundOn = false;
 
-  document.getElementById('dismiss-btn').addEventListener('click', () => {
+function buildRain() {
+  if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+
+  // Pink noise — Voss-McCartney
+  const sr  = audioCtx.sampleRate;
+  const buf = audioCtx.createBuffer(1, sr * 4, sr);
+  const d   = buf.getChannelData(0);
+  let b0=0, b1=0, b2=0, b3=0, b4=0, b5=0, b6=0;
+  for (let i = 0; i < d.length; i++) {
+    const w = Math.random() * 2 - 1;
+    b0 = 0.99886*b0 + w*0.0555179;
+    b1 = 0.99332*b1 + w*0.0750759;
+    b2 = 0.96900*b2 + w*0.1538520;
+    b3 = 0.86650*b3 + w*0.3104856;
+    b4 = 0.55000*b4 + w*0.5329522;
+    b5 = -0.7616*b5 - w*0.0168980;
+    d[i] = (b0+b1+b2+b3+b4+b5+b6 + w*0.5362) * 0.11;
+    b6 = w * 0.115926;
+  }
+
+  const src = audioCtx.createBufferSource();
+  src.buffer = buf;
+  src.loop = true;
+
+  const bp = audioCtx.createBiquadFilter();
+  bp.type = 'bandpass';
+  bp.frequency.value = 1200;
+  bp.Q.value = 0.4;
+
+  const hs = audioCtx.createBiquadFilter();
+  hs.type = 'highshelf';
+  hs.frequency.value = 4000;
+  hs.gain.value = 3;
+
+  const gain = audioCtx.createGain();
+  gain.gain.value = 0;
+
+  src.connect(bp); bp.connect(hs); hs.connect(gain); gain.connect(audioCtx.destination);
+  src.start();
+  gain.gain.setTargetAtTime(0.22, audioCtx.currentTime, 0.8);
+
+  return { src, gain };
+}
+
+function stopRain() {
+  if (!rainNodes) return;
+  rainNodes.gain.gain.setTargetAtTime(0, audioCtx.currentTime, 0.6);
+  const s = rainNodes.src;
+  setTimeout(() => { try { s.stop(); } catch(e){} }, 2000);
+  rainNodes = null;
+}
+
+soundBtn.addEventListener('click', () => {
+  soundOn = !soundOn;
+  if (soundOn) {
+    rainNodes = buildRain();
+    soundBtn.textContent = '🔊';
+    soundBtn.title = 'Silenciar lluvia';
+  } else {
+    stopRain();
+    soundBtn.textContent = '🔇';
+    soundBtn.title = 'Lluvia de Utrecht';
+  }
+});
+
+/* ===== PWA INSTALL ===== */
+let deferredPrompt;
+window.addEventListener('beforeinstallprompt', (e) => {
+  e.preventDefault();
+  deferredPrompt = e;
+  document.getElementById('install-banner').classList.add('show');
+});
+document.getElementById('install-btn').addEventListener('click', async () => {
+  if (deferredPrompt) {
+    deferredPrompt.prompt();
+    const { outcome } = await deferredPrompt.userChoice;
+    deferredPrompt = null;
     document.getElementById('install-banner').classList.remove('show');
-  });
+  }
+});
+document.getElementById('dismiss-btn').addEventListener('click', () => {
+  document.getElementById('install-banner').classList.remove('show');
+});
 </script>
 
 </body>
