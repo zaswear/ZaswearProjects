@@ -1,0 +1,638 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+  <meta name="theme-color" content="#f7f2e8">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="ZasProjects">
+  <meta name="description" content="Proyectos web de zaswear">
+  <title>ZasProjects · zaswear</title>
+  <link rel="manifest" href="manifest.json">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,400&family=Space+Mono:wght@400;700&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --cream:         #f7f2e8;
+      --cream-soft:    #f0e9d8;
+      --cream-card:    #ebe4d0;
+      --cream-border:  #d0c8b4;
+      --ink:           #2c2419;
+      --ink-mid:       #5e5245;
+      --ink-faint:     #a09080;
+      --green:         #4a7050;
+      --green-mid:     #6a9472;
+      --green-pale:    #c8ddc8;
+      --gold:          #b89040;
+      --blue:          #6080a0;
+      --terra:         #b86040;
+      --mauve:         #8060a0;
+      --teal:          #408080;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+    body {
+      background-color: var(--cream);
+      color: var(--ink);
+      font-family: 'Inter', sans-serif;
+      min-height: 100dvh;
+      overflow-x: hidden;
+    }
+
+    /* === BACKGROUND: dot grid (notebook) === */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: radial-gradient(circle, var(--cream-border) 1.2px, transparent 1.2px);
+      background-size: 22px 22px;
+      opacity: 0.55;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* === BACKGROUND: botanical glows === */
+    body::after {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 45% 40% at 5% 10%,  rgba(74,112,80,0.13) 0%, transparent 70%),
+        radial-gradient(ellipse 35% 35% at 95% 85%, rgba(74,112,80,0.10) 0%, transparent 70%),
+        radial-gradient(ellipse 28% 28% at 88% 8%,  rgba(184,144,64,0.08) 0%, transparent 70%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* === BOTANICAL CORNERS (SVG inline, fixed) === */
+    .leaf-tl {
+      position: fixed;
+      top: -12px; left: -12px;
+      width: 170px;
+      opacity: 0.16;
+      pointer-events: none;
+      z-index: 0;
+      transform: rotate(8deg);
+    }
+
+    .leaf-br {
+      position: fixed;
+      bottom: -12px; right: -12px;
+      width: 150px;
+      opacity: 0.13;
+      pointer-events: none;
+      z-index: 0;
+      transform: rotate(-168deg);
+    }
+
+    /* === CONSTELLATION (NASA/space ref, top-right) === */
+    .stars {
+      position: fixed;
+      top: 0; right: 0;
+      width: 210px; height: 210px;
+      opacity: 0.14;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* === LAYOUT === */
+    .wrapper {
+      position: relative;
+      z-index: 1;
+      max-width: 480px;
+      margin: 0 auto;
+    }
+
+    /* === HEADER === */
+    header {
+      padding: 50px 24px 18px;
+    }
+
+    .logo-line {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      margin-bottom: 18px;
+      opacity: 0;
+      animation: fadeUp 0.5s ease 0.1s forwards;
+    }
+
+    .live-dot {
+      width: 7px; height: 7px;
+      border-radius: 50%;
+      background: var(--green);
+      animation: blink 2.5s ease infinite;
+      flex-shrink: 0;
+    }
+
+    .logo-text {
+      font-family: 'Space Mono', monospace;
+      font-size: 10px;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: var(--green);
+    }
+
+    h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(38px, 10vw, 54px);
+      font-weight: 900;
+      line-height: 1.0;
+      letter-spacing: -0.02em;
+      color: var(--ink);
+      opacity: 0;
+      animation: fadeUp 0.5s ease 0.2s forwards;
+    }
+
+    h1 em {
+      font-style: italic;
+      font-weight: 700;
+      color: var(--green);
+    }
+
+    .subtitle {
+      font-family: 'Space Mono', monospace;
+      font-size: 10px;
+      color: var(--ink-faint);
+      letter-spacing: 0.10em;
+      margin-top: 14px;
+      line-height: 1.8;
+      opacity: 0;
+      animation: fadeUp 0.5s ease 0.3s forwards;
+    }
+
+    .subtitle b { color: var(--green-mid); font-weight: 400; }
+
+    /* tiny gaming easter egg — visible but quiet */
+    .status-bar {
+      font-family: 'Space Mono', monospace;
+      font-size: 9px;
+      color: var(--cream-border);
+      letter-spacing: 0.08em;
+      margin-top: 8px;
+      opacity: 0;
+      animation: fadeUp 0.5s ease 0.4s forwards;
+      user-select: none;
+    }
+
+    /* horizontal rule — like a pressed-flower divider */
+    .rule {
+      margin: 22px 24px 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--cream-border) 25%, var(--cream-border) 75%, transparent);
+      opacity: 0;
+      animation: fadeIn 0.6s ease 0.5s forwards;
+      position: relative;
+    }
+
+    .rule::after {
+      content: '✦';
+      position: absolute;
+      left: 50%; top: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 9px;
+      color: var(--cream-border);
+      background: var(--cream);
+      padding: 0 6px;
+    }
+
+    /* === GRID === */
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      padding: 20px 16px 12px;
+    }
+
+    .card {
+      position: relative;
+      background: var(--cream-soft);
+      border: 1px solid var(--cream-border);
+      border-radius: 14px;
+      padding: 16px 14px 14px;
+      height: 158px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      cursor: pointer;
+      text-decoration: none;
+      color: inherit;
+      overflow: hidden;
+      box-shadow: 0 2px 8px rgba(44,36,25,0.07), inset 0 1px 0 rgba(255,255,255,0.55);
+      opacity: 0;
+      transform: translateY(12px);
+      transition: border-color 0.2s, transform 0.18s ease, box-shadow 0.2s;
+    }
+
+    /* top accent stripe */
+    .card::after {
+      content: '';
+      position: absolute;
+      top: 0; left: 18px; right: 18px;
+      height: 2px;
+      border-radius: 0 0 2px 2px;
+      background: var(--card-color, var(--green));
+      opacity: 0.45;
+      transition: opacity 0.2s, left 0.2s, right 0.2s;
+    }
+
+    /* warm glow orb */
+    .card::before {
+      content: '';
+      position: absolute;
+      bottom: -24px; right: -24px;
+      width: 100px; height: 100px;
+      border-radius: 50%;
+      background: var(--card-color, var(--green));
+      opacity: 0.07;
+      filter: blur(30px);
+      transition: opacity 0.2s;
+    }
+
+    .card:nth-child(1) { animation: fadeUp 0.4s ease 0.52s forwards; }
+    .card:nth-child(2) { animation: fadeUp 0.4s ease 0.58s forwards; }
+    .card:nth-child(3) { animation: fadeUp 0.4s ease 0.64s forwards; }
+    .card:nth-child(4) { animation: fadeUp 0.4s ease 0.70s forwards; }
+    .card:nth-child(5) { animation: fadeUp 0.4s ease 0.76s forwards; }
+    .card:nth-child(6) { animation: fadeUp 0.4s ease 0.82s forwards; }
+
+    .card:active {
+      transform: scale(0.965) translateY(0);
+      border-color: var(--card-color, var(--green));
+      box-shadow: 0 4px 20px rgba(44,36,25,0.12);
+    }
+
+    .card:active::after  { opacity: 1; left: 0; right: 0; }
+    .card:active::before { opacity: 0.16; }
+
+    .card-num {
+      font-family: 'Space Mono', monospace;
+      font-size: 9px;
+      color: var(--card-color, var(--green));
+      letter-spacing: 0.1em;
+      opacity: 0.75;
+    }
+
+    .card-icon {
+      font-size: 26px;
+      line-height: 1;
+      margin-top: 6px;
+    }
+
+    .card-name {
+      font-family: 'Playfair Display', serif;
+      font-size: 14.5px;
+      font-weight: 700;
+      line-height: 1.2;
+      color: var(--ink);
+    }
+
+    .card-tag {
+      font-family: 'Space Mono', monospace;
+      font-size: 8px;
+      color: var(--ink-faint);
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      margin-top: 4px;
+    }
+
+    .card-arrow {
+      position: absolute;
+      bottom: 12px; right: 12px;
+      width: 21px; height: 21px;
+      border-radius: 50%;
+      border: 1px solid var(--card-color, var(--green));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0.3;
+      font-size: 10px;
+      color: var(--card-color, var(--green));
+      transition: opacity 0.2s;
+    }
+
+    .card:active .card-arrow { opacity: 1; }
+
+    .badge {
+      position: absolute;
+      top: 9px; right: 9px;
+      font-family: 'Space Mono', monospace;
+      font-size: 7px;
+      letter-spacing: 0.08em;
+      padding: 2px 5px;
+      border-radius: 3px;
+      background: var(--cream-card);
+      color: var(--ink-faint);
+      border: 1px solid var(--cream-border);
+      text-transform: uppercase;
+    }
+
+    /* === FOOTER === */
+    footer {
+      padding: 10px 24px 44px;
+      opacity: 0;
+      animation: fadeIn 0.6s ease 0.95s forwards;
+    }
+
+    .footer-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 5px;
+    }
+
+    .pulse-dot {
+      width: 5px; height: 5px;
+      border-radius: 50%;
+      background: var(--green);
+      animation: blink 2.5s ease infinite;
+      flex-shrink: 0;
+    }
+
+    .footer-main {
+      font-family: 'Space Mono', monospace;
+      font-size: 9px;
+      color: var(--ink-faint);
+      letter-spacing: 0.12em;
+    }
+
+    .footer-main a {
+      color: var(--green-mid);
+      text-decoration: none;
+    }
+
+    .footer-sub {
+      font-family: 'Space Mono', monospace;
+      font-size: 8px;
+      color: var(--cream-border);
+      letter-spacing: 0.10em;
+      padding-left: 13px;
+    }
+
+    /* === ANIMATIONS === */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(12px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to   { opacity: 1; }
+    }
+
+    @keyframes blink {
+      0%, 100% { opacity: 1;   transform: scale(1); }
+      50%       { opacity: 0.3; transform: scale(0.6); }
+    }
+
+    /* === INSTALL BANNER === */
+    #install-banner {
+      display: none;
+      position: fixed;
+      bottom: 16px; left: 16px; right: 16px;
+      z-index: 100;
+      background: var(--cream-soft);
+      border: 1px solid var(--cream-border);
+      border-radius: 14px;
+      padding: 14px 16px;
+      align-items: center;
+      gap: 12px;
+      box-shadow: 0 8px 24px rgba(44,36,25,0.13);
+    }
+
+    #install-banner.show { display: flex; }
+
+    #install-banner p {
+      flex: 1;
+      font-size: 13px;
+      line-height: 1.4;
+      color: var(--ink);
+    }
+
+    #install-banner p span {
+      display: block;
+      font-size: 10px;
+      color: var(--ink-faint);
+      font-family: 'Space Mono', monospace;
+      margin-top: 2px;
+    }
+
+    #install-btn {
+      background: var(--green);
+      color: var(--cream);
+      border: none;
+      border-radius: 8px;
+      padding: 8px 14px;
+      font-family: 'Inter', sans-serif;
+      font-weight: 600;
+      font-size: 13px;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+
+    #dismiss-btn {
+      background: none;
+      border: none;
+      color: var(--ink-faint);
+      font-size: 16px;
+      cursor: pointer;
+      padding: 0 2px;
+    }
+  </style>
+</head>
+<body>
+
+<!-- Botanical corner — top left -->
+<svg class="leaf-tl" viewBox="0 0 180 180" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <path d="M15 160 C45 90, 90 45, 165 15 C90 65, 65 90, 15 160Z" fill="#4a7050"/>
+  <path d="M8 140 C35 85, 70 48, 148 10 C75 58, 48 85, 8 140Z" fill="#6a9472" opacity="0.6"/>
+  <line x1="15" y1="160" x2="165" y2="15" stroke="#4a7050" stroke-width="1.2" opacity="0.35"/>
+  <path d="M32 135 C55 108, 78 82, 108 52" stroke="#4a7050" stroke-width="0.8" fill="none" opacity="0.35"/>
+  <path d="M18 112 C44 92, 65 72, 92 42" stroke="#4a7050" stroke-width="0.6" fill="none" opacity="0.25"/>
+  <circle cx="75" cy="90" r="3" fill="#4a7050" opacity="0.3"/>
+  <circle cx="48" cy="118" r="2" fill="#6a9472" opacity="0.3"/>
+</svg>
+
+<!-- Botanical corner — bottom right -->
+<svg class="leaf-br" viewBox="0 0 180 180" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <path d="M15 160 C45 90, 90 45, 165 15 C90 65, 65 90, 15 160Z" fill="#4a7050"/>
+  <path d="M8 140 C35 85, 70 48, 148 10 C75 58, 48 85, 8 140Z" fill="#6a9472" opacity="0.55"/>
+  <line x1="15" y1="160" x2="165" y2="15" stroke="#4a7050" stroke-width="1.2" opacity="0.3"/>
+  <path d="M32 135 C55 108, 78 82, 108 52" stroke="#4a7050" stroke-width="0.8" fill="none" opacity="0.3"/>
+  <circle cx="75" cy="90" r="3" fill="#4a7050" opacity="0.25"/>
+</svg>
+
+<!-- Constellation — top right (NASA / cosmos ref) -->
+<svg class="stars" viewBox="0 0 210 210" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <circle cx="45"  cy="32"  r="1.8" fill="#b89040"/>
+  <circle cx="88"  cy="14"  r="1.2" fill="#b89040"/>
+  <circle cx="130" cy="48"  r="2.2" fill="#b89040"/>
+  <circle cx="168" cy="22"  r="1.2" fill="#b89040"/>
+  <circle cx="192" cy="65"  r="1.8" fill="#b89040"/>
+  <circle cx="148" cy="88"  r="1.2" fill="#b89040"/>
+  <circle cx="62"  cy="78"  r="1.8" fill="#b89040"/>
+  <circle cx="108" cy="96"  r="1"   fill="#b89040"/>
+  <circle cx="178" cy="118" r="1.5" fill="#b89040"/>
+  <circle cx="30"  cy="58"  r="1"   fill="#b89040"/>
+  <circle cx="155" cy="142" r="1.2" fill="#b89040"/>
+  <line x1="45"  y1="32"  x2="88"  y2="14"  stroke="#b89040" stroke-width="0.5" opacity="0.5"/>
+  <line x1="88"  y1="14"  x2="130" y2="48"  stroke="#b89040" stroke-width="0.5" opacity="0.5"/>
+  <line x1="130" y1="48"  x2="168" y2="22"  stroke="#b89040" stroke-width="0.5" opacity="0.5"/>
+  <line x1="168" y1="22"  x2="192" y2="65"  stroke="#b89040" stroke-width="0.5" opacity="0.5"/>
+  <line x1="192" y1="65"  x2="178" y2="118" stroke="#b89040" stroke-width="0.5" opacity="0.5"/>
+  <line x1="178" y1="118" x2="155" y2="142" stroke="#b89040" stroke-width="0.5" opacity="0.5"/>
+  <line x1="130" y1="48"  x2="148" y2="88"  stroke="#b89040" stroke-width="0.5" opacity="0.4"/>
+  <line x1="45"  y1="32"  x2="30"  y2="58"  stroke="#b89040" stroke-width="0.5" opacity="0.4"/>
+  <line x1="30"  y1="58"  x2="62"  y2="78"  stroke="#b89040" stroke-width="0.5" opacity="0.4"/>
+  <line x1="62"  y1="78"  x2="108" y2="96"  stroke="#b89040" stroke-width="0.5" opacity="0.35"/>
+</svg>
+
+<div class="wrapper">
+
+  <header>
+    <div class="logo-line">
+      <div class="live-dot"></div>
+      <div class="logo-text">zaswear · dev</div>
+    </div>
+    <h1>Mis<br><em>Proyectos</em></h1>
+    <div class="subtitle">
+      // <b>recetas</b> · cosmos · código · <b>utrecht</b> · ovnis<br>
+      &lt;web&gt; personal · vanilla js · github pages &lt;/web&gt;
+    </div>
+    <div class="status-bar">◉ 6/6 proyectos cargados — press ↵ to explore</div>
+  </header>
+
+  <div class="rule"></div>
+
+  <div class="grid">
+
+    <a class="card" href="https://zaswear.github.io/mijnutrecht" target="_blank"
+       style="--card-color:#6080a0">
+      <div>
+        <div class="card-num">[01]</div>
+        <div class="card-icon">🌷</div>
+      </div>
+      <div>
+        <div class="card-name">Mijn Utrecht</div>
+        <div class="card-tag">🚲 live · canales</div>
+      </div>
+      <div class="card-arrow">↗</div>
+    </a>
+
+    <a class="card" href="https://zaswear.github.io/weekly-meal-planner/" target="_blank"
+       style="--card-color:#4a7050">
+      <div>
+        <div class="card-num">[02]</div>
+        <div class="card-icon">🌿</div>
+      </div>
+      <div>
+        <div class="card-name">Recetas Semanales</div>
+        <div class="card-tag">🍴 live · recetas</div>
+      </div>
+      <div class="card-arrow">↗</div>
+    </a>
+
+    <a class="card" href="https://zaswear.github.io/nasaexplorer/" target="_blank"
+       style="--card-color:#b89040">
+      <div>
+        <div class="card-num">[03]</div>
+        <div class="card-icon">🪐</div>
+      </div>
+      <div>
+        <div class="card-name">NASA Explorer</div>
+        <div class="card-tag">🌌 space · api</div>
+      </div>
+      <div class="card-arrow">↗</div>
+    </a>
+
+    <a class="card" href="https://zaswear.github.io/Salud360/" target="_blank"
+       style="--card-color:#6a9472">
+      <div>
+        <div class="card-num">[04]</div>
+        <div class="card-icon">🌱</div>
+      </div>
+      <div>
+        <div class="card-name">Salud360</div>
+        <div class="card-tag">🩺 health · app</div>
+      </div>
+      <div class="card-arrow">↗</div>
+    </a>
+
+    <a class="card" href="https://github.com/zaswear/theartnoveau" target="_blank"
+       style="--card-color:#8060a0">
+      <div class="badge">repo</div>
+      <div>
+        <div class="card-num">[05]</div>
+        <div class="card-icon">🌸</div>
+      </div>
+      <div>
+        <div class="card-name">Art Noveau</div>
+        <div class="card-tag">✦ art · diseño</div>
+      </div>
+      <div class="card-arrow">↗</div>
+    </a>
+
+    <a class="card" href="https://pursue-uap-project.github.io/pursueproject/" target="_blank"
+       style="--card-color:#408080">
+      <div>
+        <div class="card-num">[06]</div>
+        <div class="card-icon">🛸</div>
+      </div>
+      <div>
+        <div class="card-name">Pursue Project</div>
+        <div class="card-tag">◎ uap · ovnis</div>
+      </div>
+      <div class="card-arrow">↗</div>
+    </a>
+
+  </div>
+
+  <footer>
+    <div class="footer-row">
+      <div class="pulse-dot"></div>
+      <div class="footer-main">
+        <a href="https://github.com/zaswear" target="_blank">github.com/zaswear</a>
+        &nbsp;·&nbsp;Utrecht, NL
+      </div>
+    </div>
+    <div class="footer-sub">52.0907°N 5.1214°E &nbsp;·&nbsp; &lt;/&gt; vanilla &nbsp;·&nbsp; 2025</div>
+  </footer>
+
+</div>
+
+<!-- Install banner -->
+<div id="install-banner">
+  <p>Añadir al escritorio<span>Instalar como app nativa</span></p>
+  <button id="install-btn">Instalar</button>
+  <button id="dismiss-btn">✕</button>
+</div>
+
+<script>
+  let deferredPrompt;
+
+  window.addEventListener('beforeinstallprompt', (e) => {
+    e.preventDefault();
+    deferredPrompt = e;
+    document.getElementById('install-banner').classList.add('show');
+  });
+
+  document.getElementById('install-btn').addEventListener('click', async () => {
+    if (deferredPrompt) {
+      deferredPrompt.prompt();
+      const { outcome } = await deferredPrompt.userChoice;
+      deferredPrompt = null;
+      document.getElementById('install-banner').classList.remove('show');
+    }
+  });
+
+  document.getElementById('dismiss-btn').addEventListener('click', () => {
+    document.getElementById('install-banner').classList.remove('show');
+  });
+</script>
+
+</body>
+</html>
