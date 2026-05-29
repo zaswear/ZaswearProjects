@@ -328,6 +328,7 @@
     .card:nth-child(6) { animation: fadeUp 0.4s ease 0.82s forwards; }
     .card:nth-child(7) { animation: fadeUp 0.4s ease 0.88s forwards; }
     .card:nth-child(8) { animation: fadeUp 0.4s ease 0.94s forwards; }
+    .card:nth-child(9) { animation: fadeUp 0.4s ease 1.00s forwards; }
 
     .card:active { transform: scale(0.965); border-color: var(--card-color, var(--green)); }
     .card:active::after  { opacity: 1; left: 0; right: 0; }
@@ -636,10 +637,10 @@
     </div>
     <h1>Mis<br><em>Proyectos</em></h1>
     <div class="subtitle">
-      // <b>recetas</b> · cosmos · código · <b>utrecht</b> · ovnis · <b>juegos</b><br>
+      // <b>recetas</b> · cosmos · código · <b>utrecht</b> · ovnis · <b>juegos</b> · <b>cine</b><br>
       &lt;web&gt; personal · vanilla js · github pages &lt;/web&gt;
     </div>
-    <div class="status-bar" id="status-bar">◉ 8/8 proyectos cargados — press ↵ to explore</div>
+    <div class="status-bar" id="status-bar">◉ 9/9 proyectos cargados — press ↵ to explore</div>
   </header>
 
   <div class="rule"></div>
@@ -750,6 +751,19 @@
       <div class="card-arrow">↗</div>
     </a>
 
+    <a class="card" href="https://zaswear.github.io/directorscut/" target="_blank"
+       style="--card-color:#b89040">
+      <div>
+        <div class="card-num">[09]</div>
+        <div class="card-icon">🎬</div>
+      </div>
+      <div>
+        <div class="card-name">Director's Cut</div>
+        <div class="card-tag">🎥 dev · cine</div>
+      </div>
+      <div class="card-arrow">↗</div>
+    </a>
+
   </div>
 
   <footer>
@@ -822,7 +836,7 @@ function getSeason() {
 const season = getSeason();
 root.setAttribute('data-season', season);
 document.getElementById('status-bar').textContent =
-  `◉ 8/8 proyectos · ${SEASONS[season].icon} ${SEASONS[season].label} · press ↵ to explore`;
+  `◉ 9/9 proyectos · ${SEASONS[season].icon} ${SEASONS[season].label} · press ↵ to explore`;
 
 /* ===== PARTICLES ===== */
 const canvas = document.getElementById('particle-canvas');
