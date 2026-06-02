@@ -2,30 +2,36 @@
 
 Portfolio personal de proyectos web — un launcher minimalista instalable como PWA.
 
-**URL:** `zaswear.github.io/ZaswearProjects` (o desde GitHub Pages)  
+**URL:** `zaswear.github.io/ZaswearProjects`  
 **Repo:** `github.com/zaswear`
 
 ---
 
 ## Proyectos
 
-| # | Nombre | Estado | Tema |
-|---|--------|--------|------|
-| 01 | [Mijn Utrecht](https://zaswear.github.io/mijnutrecht) | live · GitHub Pages | Bitácora visual de Utrecht — mapa, rutas bici, fotos |
-| 02 | [Meal Planner](https://github.com/zaswear/weekly-meal-planner) | repo | Planificador de menú semanal con recetas |
-| 03 | [NASA Explorer](https://github.com/zaswear/nasaexplorer) | repo | Explorador espacial con la NASA API |
-| 04 | [Salud360](https://github.com/zaswear/Salud360) | repo | App de seguimiento de salud (9 meses, Notion data) |
-| 05 | [Art Noveau](https://github.com/zaswear/theartnoveau) | repo | Diseño y arte digital |
-| 06 | [Pursue Project](https://github.com/zaswear/pursueproject) | repo | Investigación UAP / OVNIs |
+| # | Nombre | Estado | Tema | URL |
+|---|--------|--------|------|-----|
+| 01 | [Mijn Utrecht](https://zaswear.github.io/mijnutrecht) | live · GitHub Pages | Bitácora visual de Utrecht — mapa, rutas bici, fotos | zaswear.github.io/mijnutrecht |
+| 02 | [Meal Planner](https://zaswear.github.io/weekly-meal-planner/) | live · GitHub Pages | Planificador de menú semanal con recetas | zaswear.github.io/weekly-meal-planner |
+| 03 | [NASA Explorer](https://zaswear.github.io/nasaexplorer/) | live · GitHub Pages | Explorador espacial con la NASA API | zaswear.github.io/nasaexplorer |
+| 04 | [Salud360](https://zaswear.github.io/Salud360/) | live · GitHub Pages | App de seguimiento de salud — yoga y ejercicios | zaswear.github.io/Salud360 |
+| 05 | [Art Noveau](https://zaswear.github.io/theartnoveau/) | live · GitHub Pages | Diseño y arte digital | zaswear.github.io/theartnoveau |
+| 06 | [Pursue Project](https://pursue-uap-project.github.io/pursueproject/) | live · GitHub Pages | Investigación UAP / OVNIs | pursue-uap-project.github.io/pursueproject |
+| 07 | [Tengo Hambre](https://zaswear.github.io/tengohambre/) | live · GitHub Pages | Descubridor de restaurantes | zaswear.github.io/tengohambre |
+| 08 | [GameCalendar](https://gamecalendar-iota.vercel.app/) | live · Vercel | Lanzamientos de videojuegos — IGDB + Steam | gamecalendar-iota.vercel.app |
+| 09 | [Director's Cut](https://directorscut-five.vercel.app) | live · Vercel | Base de datos personal de películas con PostgreSQL | directorscut-five.vercel.app |
+| U1 | ReClip | utilidad · Render | Descargador de vídeos y música (panel integrado) | reclip-icxk.onrender.com |
 
 ---
 
 ## Stack
 
-- **HTML5** vanilla — sin frameworks, todo en `Index.html`
-- **CSS** inline — paleta crema + verdes botánicos
+- **HTML5** vanilla — sin frameworks, todo en `index.html`
+- **CSS** inline — paleta crema + verdes botánicos, modo oscuro
 - **PWA** — instalable con `manifest.json` y banner nativo
 - **Google Fonts** — Playfair Display + Space Mono + Inter
+- **Modo oscuro** — detecta `prefers-color-scheme` y permite toggle manual
+- **Temas estacionales** — el acento de color cambia según la época del año
 
 No hay build step. Es HTML estático puro.
 
@@ -35,7 +41,7 @@ No hay build step. Es HTML estático puro.
 
 ```
 ZaswearProjects/
-├── Index.html       ← Toda la web en un archivo
+├── index.html       ← Toda la web en un archivo
 ├── manifest.json    ← Configuración PWA
 └── README.md        ← Este archivo
 ```
@@ -44,7 +50,7 @@ ZaswearProjects/
 
 ## Añadir un proyecto nuevo
 
-1. Abrir `Index.html` y duplicar un bloque `.card` en el grid
+1. Abrir `index.html` y duplicar un bloque `.card` en el grid
 2. Actualizar: número `[0N]`, emoji, nombre, tag, URL del `href`
 3. Elegir un `--card-color` de la paleta (ver variables CSS en `:root`)
 4. Actualizar el contador en el header: `// N proyectos activos`
@@ -57,11 +63,11 @@ ZaswearProjects/
 | Variable | Valor | Uso |
 |----------|-------|-----|
 | `--cream` | `#f7f2e8` | Fondo principal |
-| `--green` | `#4a7050` | Acento primario |
+| `--green` | `#4a7050` | Acento primario (primavera) |
 | `--blue` | `#6080a0` | Utrecht / canales |
-| `--gold` | `#b89040` | NASA / espacio |
-| `--terra` | `#b86040` | Recetas / calidez |
-| `--teal` | `#408080` | UAP / misterio |
+| `--gold` | `#b89040` | NASA / espacio (otoño) |
+| `--terra` | `#b86040` | Recetas / calidez (verano) |
+| `--teal` | `#408080` | UAP / misterio (invierno) |
 | `--mauve` | `#8060a0` | Arte / diseño |
 
 ---
