@@ -698,101 +698,6 @@
       padding: 0 2px;
     }
 
-    /* ===== RECLIP PANEL ===== */
-    #reclip-panel {
-      position: fixed;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      height: 85dvh;
-      background: var(--cream-soft);
-      border-top: 1px solid var(--cream-border);
-      border-radius: 20px 20px 0 0;
-      z-index: 200;
-      transform: translateY(100%);
-      transition: transform 380ms cubic-bezier(.22, 1, .36, 1);
-      display: flex;
-      flex-direction: column;
-      overflow: hidden;
-      box-shadow: 0 -8px 40px rgba(44, 36, 25, 0.2);
-    }
-
-    #reclip-panel.open {
-      transform: translateY(0);
-    }
-
-    #reclip-backdrop {
-      position: fixed;
-      inset: 0;
-      background: rgba(44, 36, 25, 0.45);
-      z-index: 199;
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity 300ms ease;
-    }
-
-    #reclip-backdrop.show {
-      opacity: 1;
-      pointer-events: auto;
-    }
-
-    #reclip-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 14px 20px 12px;
-      border-bottom: 1px solid var(--cream-border);
-      flex-shrink: 0;
-    }
-
-    #reclip-header-left {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    #reclip-header-left svg {
-      width: 16px;
-      height: 16px;
-      color: var(--ink-mid);
-    }
-
-    #reclip-header span {
-      font-family: 'Space Mono', monospace;
-      font-size: 12px;
-      letter-spacing: 0.04em;
-      color: var(--ink-mid);
-    }
-
-    #reclip-close {
-      background: none;
-      border: none;
-      color: var(--ink-faint);
-      font-size: 18px;
-      cursor: pointer;
-      padding: 2px 4px;
-      line-height: 1;
-    }
-
-    #reclip-close:hover {
-      color: var(--ink);
-    }
-
-    #reclip-frame {
-      flex: 1;
-      border: none;
-      width: 100%;
-      background: white;
-    }
-
-    #reclip-drag {
-      width: 36px;
-      height: 4px;
-      background: var(--cream-border);
-      border-radius: 2px;
-      margin: 10px auto 0;
-      flex-shrink: 0;
-    }
   </style>
 </head>
 
@@ -851,24 +756,6 @@
     <button class="ctrl-btn" id="theme-btn" title="Modo oscuro">🌙</button>
   </div>
 
-  <!-- Panel ReClip -->
-  <div id="reclip-backdrop"></div>
-  <div id="reclip-panel" role="dialog" aria-label="ReClip downloader" aria-modal="true">
-    <div id="reclip-drag"></div>
-    <div id="reclip-header">
-      <div id="reclip-header-left">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-          stroke-linejoin="round">
-          <path d="M9 18V5l12-2v13" />
-          <circle cx="6" cy="18" r="3" />
-          <circle cx="18" cy="16" r="3" />
-        </svg>
-        <span>ReClip · descargar música</span>
-      </div>
-      <button id="reclip-close" aria-label="Cerrar">✕</button>
-    </div>
-    <iframe id="reclip-frame" title="ReClip" allow="downloads" loading="lazy"></iframe>
-  </div>
 
   <div class="wrapper">
 
@@ -999,7 +886,7 @@
         <div class="card-arrow">↗</div>
       </a>
 
-      <a class="card card-utility" href="#" id="reclip-card" style="--card-color:#c87850" aria-label="Abrir ReClip">
+      <a class="card card-utility" href="https://reclip-icxk.onrender.com" target="_blank" rel="noopener" style="--card-color:#c87850" aria-label="Abrir ReClip">
         <div>
           <div class="card-num">[U1]</div>
           <div class="card-icon">♪</div>
@@ -1309,41 +1196,6 @@
       document.getElementById('install-banner').classList.remove('show');
     });
 
-    /* ===== RECLIP PANEL ===== */
-    // Cambia esta URL por tu URL de Render tras el despliegue
-    const RECLIP_URL = 'https://reclip-icxk.onrender.com';
-
-    const reclipPanel = document.getElementById('reclip-panel');
-    const reclipBackdrop = document.getElementById('reclip-backdrop');
-    const reclipFrame = document.getElementById('reclip-frame');
-    let reclipLoaded = false;
-
-    function openReclip() {
-      if (!reclipLoaded) {
-        reclipFrame.src = RECLIP_URL;
-        reclipLoaded = true;
-      }
-      reclipPanel.classList.add('open');
-      reclipBackdrop.classList.add('show');
-      document.body.style.overflow = 'hidden';
-    }
-
-    function closeReclip() {
-      reclipPanel.classList.remove('open');
-      reclipBackdrop.classList.remove('show');
-      document.body.style.overflow = '';
-    }
-
-    document.getElementById('reclip-card').addEventListener('click', e => {
-      e.preventDefault();
-      openReclip();
-    });
-    document.getElementById('reclip-close').addEventListener('click', closeReclip);
-    reclipBackdrop.addEventListener('click', closeReclip);
-
-    document.addEventListener('keydown', e => {
-      if (e.key === 'Escape' && reclipPanel.classList.contains('open')) closeReclip();
-    });
   </script>
 
 </body>
