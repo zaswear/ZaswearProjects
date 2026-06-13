@@ -13,15 +13,14 @@ Portfolio personal de proyectos web — un launcher minimalista instalable como 
 |---|--------|--------|------|-----|
 | 01 | [Mijn Utrecht](https://zaswear.github.io/mijnutrecht) | live · GitHub Pages | Bitácora visual de Utrecht — mapa, rutas bici, fotos | zaswear.github.io/mijnutrecht |
 | 02 | [Meal Planner](https://zaswear.github.io/weekly-meal-planner/) | live · GitHub Pages | Planificador de menú semanal con recetas | zaswear.github.io/weekly-meal-planner |
-| 03 | [NASA Explorer](https://zaswear.github.io/nasaexplorer/) | live · GitHub Pages | Explorador espacial con la NASA API | zaswear.github.io/nasaexplorer |
+| 03 | [NASA Explorer · UAP](https://pursue-uap-project.github.io/nasaexplorer/en/) | live · GitHub Pages | Explorador espacial NASA + investigación UAP/OVNIs (fusión de NASA Explorer y Pursue Project) | pursue-uap-project.github.io/nasaexplorer/en |
 | 04 | [Salud360](https://zaswear.github.io/Salud360/) | live · GitHub Pages | App de seguimiento de salud — yoga y ejercicios | zaswear.github.io/Salud360 |
 | 05 | [Art Noveau](https://zaswear.github.io/theartnoveau/) | live · GitHub Pages | Diseño y arte digital | zaswear.github.io/theartnoveau |
-| 06 | [Pursue Project](https://pursue-uap-project.github.io/pursueproject/) | live · GitHub Pages | Investigación UAP / OVNIs | pursue-uap-project.github.io/pursueproject |
-| 07 | [Tengo Hambre](https://zaswear.github.io/tengohambre/) | live · GitHub Pages | Descubridor de restaurantes | zaswear.github.io/tengohambre |
-| 08 | [GameCalendar](https://gamecalendar-iota.vercel.app/) | live · Vercel | Lanzamientos de videojuegos — IGDB + Steam | gamecalendar-iota.vercel.app |
-| 09 | [Director's Cut](https://directorscut-five.vercel.app) | live · Vercel | Base de datos personal de películas con PostgreSQL | directorscut-five.vercel.app |
-| 10 | [Cosas de Xela](https://cosasdexela.vercel.app) | live · Vercel | Blog de recetas de cocina tradicional gallega | cosasdexela.vercel.app |
-| 11 | [CheckStatus](https://checkstatus-five.vercel.app) | live · Vercel | Monitor de disponibilidad (uptime robot personal) | checkstatus-five.vercel.app |
+| 06 | [Tengo Hambre](https://zaswear.github.io/tengohambre/) | live · GitHub Pages | Descubridor de restaurantes | zaswear.github.io/tengohambre |
+| 07 | [GameCalendar](https://gamecalendar-iota.vercel.app/) | live · Vercel | Lanzamientos de videojuegos — IGDB + Steam | gamecalendar-iota.vercel.app |
+| 08 | [Director's Cut](https://directorscut-five.vercel.app) | live · Vercel | Base de datos personal de películas con PostgreSQL | directorscut-five.vercel.app |
+| 09 | [Cosas de Xela](https://cosasdexela.vercel.app) | live · Vercel | Blog de recetas de cocina tradicional gallega | cosasdexela.vercel.app |
+| 10 | [CheckStatus](https://checkstatus-five.vercel.app) | live · Vercel | Monitor de disponibilidad (uptime robot personal) | checkstatus-five.vercel.app |
 | U1 | ReClip | utilidad · Render | Descargador de vídeos y música (panel integrado) | reclip-icxk.onrender.com |
 
 ---
