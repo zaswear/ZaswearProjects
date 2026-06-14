@@ -794,7 +794,7 @@
         // <b>recetas</b> · cosmos · código · <b>utrecht</b> · ovnis · <b>juegos</b> · <b>cine</b><br>
         &lt;web&gt; personal · vanilla js · github pages &lt;/web&gt;
       </div>
-      <div class="status-bar" id="status-bar">◉ 11 proyectos · 1 utilidad cargados — press ↵ to explore</div>
+      <div class="status-bar" id="status-bar">◉ 11 proyectos · 2 utilidades cargados — press ↵ to explore</div>
     </header>
 
     <div class="rule"></div>
@@ -934,6 +934,18 @@
         <div class="card-arrow">↗</div>
       </a>
 
+      <a class="card card-utility" href="http://localhost:3003" target="_blank" rel="noopener" style="--card-color:#4a7050" aria-label="Abrir MDMakeIt">
+        <div>
+          <div class="card-num">[U2]</div>
+          <div class="card-icon">📝</div>
+        </div>
+        <div>
+          <div class="card-name">MDMakeIt</div>
+          <div class="card-tag">⚙️ local · doc to md</div>
+        </div>
+        <div class="card-arrow">↗</div>
+      </a>
+
     </div>
 
     <footer>
@@ -1006,7 +1018,7 @@
     const season = getSeason();
     root.setAttribute('data-season', season);
     document.getElementById('status-bar').textContent =
-      `◉ 11 proyectos · 1 utilidad · ${SEASONS[season].icon} ${SEASONS[season].label} · press ↵ to explore`;
+      `◉ 11 proyectos · 2 utilidades · ${SEASONS[season].icon} ${SEASONS[season].label} · press ↵ to explore`;
 
     /* ===== PARTICLES ===== */
     const canvas = document.getElementById('particle-canvas');
