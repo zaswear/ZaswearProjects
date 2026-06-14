@@ -465,6 +465,10 @@
       animation: fadeUp 0.4s ease 1.18s forwards;
     }
 
+    .card:nth-child(13) {
+      animation: fadeUp 0.4s ease 1.24s forwards;
+    }
+
     .card:active {
       transform: scale(0.965);
       border-color: var(--card-color, var(--green));
@@ -802,7 +806,7 @@
         // <b>recetas</b> · cosmos · código · <b>utrecht</b> · ovnis · <b>juegos</b> · <b>cine</b><br>
         &lt;web&gt; personal · vanilla js · github pages &lt;/web&gt;
       </div>
-      <div class="status-bar" id="status-bar">◉ 11 proyectos · 2 utilidades cargados — press ↵ to explore</div>
+      <div class="status-bar" id="status-bar">◉ 12 proyectos · 2 utilidades cargados — press ↵ to explore</div>
     </header>
 
     <div class="rule"></div>
@@ -930,6 +934,18 @@
         <div class="card-arrow">↗</div>
       </a>
 
+      <a class="card" href="https://zaswear.github.io/kaktus.dev/" target="_blank" style="--card-color:#4f9d7a">
+        <div>
+          <div class="card-num">[11]</div>
+          <div class="card-icon">🌵</div>
+        </div>
+        <div>
+          <div class="card-name">kaktus.dev</div>
+          <div class="card-tag">✦ live · frontend patterns</div>
+        </div>
+        <div class="card-arrow">↗</div>
+      </a>
+
       <a class="card card-utility" href="https://reclip-icxk.onrender.com" target="_blank" rel="noopener" style="--card-color:#c87850" aria-label="Abrir ReClip">
         <div>
           <div class="card-num">[U1]</div>
@@ -1026,7 +1042,7 @@
     const season = getSeason();
     root.setAttribute('data-season', season);
     document.getElementById('status-bar').textContent =
-      `◉ 11 proyectos · 2 utilidades · ${SEASONS[season].icon} ${SEASONS[season].label} · press ↵ to explore`;
+      `◉ 12 proyectos · 2 utilidades · ${SEASONS[season].icon} ${SEASONS[season].label} · press ↵ to explore`;
 
     /* ===== PARTICLES ===== */
     const canvas = document.getElementById('particle-canvas');
