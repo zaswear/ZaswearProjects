@@ -1223,10 +1223,10 @@
         for (let c = 0; c < cols; c++) {
           if (grid[r][c] !== -1) continue;
           const cands = [];
-          if (c > 0 && grid[r][c - 1] !== -1) { const i = grid[r][c - 1], p = place[i]; if (free(p.c + p.w, p.r, 1, p.h)) cands.push({ nw: p.w + 1, nh: p.h, apply: () => { set(p.c + p.w, p.r, 1, p.h, i); p.w++; } }); }
-          if (r > 0 && grid[r - 1][c] !== -1) { const i = grid[r - 1][c], p = place[i]; if (free(p.c, p.r + p.h, p.w, 1)) cands.push({ nw: p.w, nh: p.h + 1, apply: () => { set(p.c, p.r + p.h, p.w, 1, i); p.h++; } }); }
-          if (c < cols - 1 && grid[r][c + 1] !== -1) { const i = grid[r][c + 1], p = place[i]; if (free(c, p.r, 1, p.h)) cands.push({ nw: p.w + 1, nh: p.h, apply: () => { set(c, p.r, 1, p.h, i); p.c = c; p.w++; } }); }
-          if (r < R - 1 && grid[r + 1] && grid[r + 1][c] !== -1) { const i = grid[r + 1][c], p = place[i]; if (free(p.c, r, p.w, 1)) cands.push({ nw: p.w, nh: p.h + 1, apply: () => { set(p.c, r, p.w, 1, i); p.r = r; p.h++; } }); }
+          if (c > 0 && grid[r][c - 1] !== -1) { const i = grid[r][c - 1], p = place[i]; if (free(p.r, p.c + p.w, 1, p.h)) cands.push({ nw: p.w + 1, nh: p.h, apply: () => { set(p.r, p.c + p.w, 1, p.h, i); p.w++; } }); }
+          if (r > 0 && grid[r - 1][c] !== -1) { const i = grid[r - 1][c], p = place[i]; if (free(p.r + p.h, p.c, p.w, 1)) cands.push({ nw: p.w, nh: p.h + 1, apply: () => { set(p.r + p.h, p.c, p.w, 1, i); p.h++; } }); }
+          if (c < cols - 1 && grid[r][c + 1] !== -1) { const i = grid[r][c + 1], p = place[i]; if (free(p.r, c, 1, p.h)) cands.push({ nw: p.w + 1, nh: p.h, apply: () => { set(p.r, c, 1, p.h, i); p.c = c; p.w++; } }); }
+          if (r < R - 1 && grid[r + 1] && grid[r + 1][c] !== -1) { const i = grid[r + 1][c], p = place[i]; if (free(r, p.c, p.w, 1)) cands.push({ nw: p.w, nh: p.h + 1, apply: () => { set(r, p.c, p.w, 1, i); p.r = r; p.h++; } }); }
           if (cands.length) {
             cands.sort((a, b) => Math.max(a.nw, a.nh) - Math.max(b.nw, b.nh) || (a.nw * a.nh) - (b.nw * b.nh));
             cands[0].apply();
