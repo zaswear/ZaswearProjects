@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-  <meta name="theme-color" content="#f7f2e8" id="meta-theme">
+  <meta name="theme-color" content="#161310">
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
@@ -21,72 +21,31 @@
     rel="stylesheet">
 
   <style>
-    /* ===== LIGHT (default) ===== */
+    /* ===== PALETA · sepia profundo (modo único) ===== */
     :root {
-      --cream: #f7f2e8;
-      --cream-soft: #f0e9d8;
-      --cream-card: #ebe4d0;
-      --cream-border: #d0c8b4;
-      --ink: #2c2419;
-      --ink-mid: #5e5245;
-      --ink-faint: #a09080;
-      --green: #4a7050;
-      --green-mid: #6a9472;
-      --gold: #b89040;
-      --blue: #6080a0;
-      --terra: #b86040;
-      --mauve: #8060a0;
-      --teal: #408080;
-      --dots-opacity: 0.55;
+      --cream: #161310;
+      --cream-soft: #1e1a15;
+      --cream-card: #26211a;
+      --cream-border: #383022;
+      --ink: #efe6d0;
+      --ink-mid: #b09a78;
+      --ink-faint: #6f6450;
+      --green: #7bbf86;
+      --green-mid: #97cf9f;
+      --gold: #d4a850;
+      --blue: #6f93b8;
+      --terra: #cc7a52;
+      --mauve: #9a7ab8;
+      --teal: #4fa0a0;
+      --dots-opacity: 0.16;
       --season-accent: var(--green);
     }
 
-    /* ===== DARK MODE ===== */
-    [data-theme="dark"] {
-      --cream: #1c1916;
-      --cream-soft: #231f1a;
-      --cream-card: #2c2820;
-      --cream-border: #3c3828;
-      --ink: #e8dfc8;
-      --ink-mid: #a09070;
-      --ink-faint: #685e50;
-      --green: #6a9468;
-      --green-mid: #8ab488;
-      --dots-opacity: 0.18;
-    }
-
-    /* ===== SEASONAL ACCENTS ===== */
-    [data-season="spring"] {
-      --season-accent: #c07888;
-    }
-
-    [data-season="summer"] {
-      --season-accent: #b89040;
-    }
-
-    [data-season="autumn"] {
-      --season-accent: #c05030;
-      --cream: #f5ede0;
-    }
-
-    [data-season="winter"] {
-      --season-accent: #708090;
-      --cream: #f0f2f8;
-      --green: #506070;
-      --green-mid: #708090;
-    }
-
-    [data-theme="dark"][data-season="spring"] {
-      --season-accent: #d090a0;
-    }
-
-    [data-theme="dark"][data-season="autumn"] {
-      --season-accent: #d07050;
-    }
-
-    [data-theme="dark"][data-season="winter"] {
-      --season-accent: #90a8c0;
-    }
+    /* ===== ACENTOS ESTACIONALES ===== */
+    [data-season="spring"] { --season-accent: #d090a0; }
+    [data-season="summer"] { --season-accent: #d4a850; }
+    [data-season="autumn"] { --season-accent: #d07050; }
+    [data-season="winter"] { --season-accent: #90a8c0; }
 
     /* ===== RESET ===== */
     * {
@@ -164,7 +123,8 @@
       top: -12px;
       left: -12px;
       width: 170px;
-      opacity: 0.16;
+      opacity: 0.22;
+      filter: brightness(1.5);
       transform: rotate(8deg);
     }
 
@@ -172,18 +132,9 @@
       bottom: -12px;
       right: -12px;
       width: 150px;
-      opacity: 0.13;
-      transform: rotate(-168deg);
-    }
-
-    [data-theme="dark"] .leaf-tl {
-      opacity: 0.22;
-      filter: brightness(1.6);
-    }
-
-    [data-theme="dark"] .leaf-br {
       opacity: 0.18;
-      filter: brightness(1.6);
+      filter: brightness(1.5);
+      transform: rotate(-168deg);
     }
 
     /* ===== CONSTELLATION ===== */
@@ -193,14 +144,10 @@
       right: 0;
       width: 210px;
       height: 210px;
-      opacity: 0.14;
+      opacity: 0.3;
       pointer-events: none;
       z-index: 0;
       transition: opacity 0.5s ease;
-    }
-
-    [data-theme="dark"] .stars {
-      opacity: 0.3;
     }
 
     /* ===== WRAPPER ===== */
@@ -343,24 +290,29 @@
       transition: color 0.5s, background-color 0.5s;
     }
 
-    /* ===== GRID ===== */
+    /* ===== BENTO GRID ===== */
     .grid {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
-      gap: 10px;
+      grid-auto-rows: 152px;
+      grid-auto-flow: row dense;
+      gap: 12px;
       padding: 20px 16px 12px;
     }
 
+    /* Spans por tamaño (lo asigna projects.json → .card--lg/md/sm) */
+    .card--lg { grid-column: span 2; grid-row: span 2; }
+    .card--md { grid-column: span 2; grid-row: span 1; }
+    .card--sm { grid-column: span 1; grid-row: span 1; }
+
     @media (max-width: 600px) {
-      .grid {
-        grid-template-columns: 1fr 1fr;
-      }
+      .grid { grid-template-columns: repeat(2, 1fr); }
     }
 
     @media (max-width: 400px) {
-      .grid {
-        grid-template-columns: 1fr;
-      }
+      .grid { grid-template-columns: 1fr; grid-auto-rows: 150px; }
+      .card--lg, .card--md { grid-column: span 1; }
+      .card--lg { grid-row: span 2; }
     }
 
     .card {
@@ -369,7 +321,6 @@
       border: 1px solid var(--cream-border);
       border-radius: 14px;
       padding: 16px 14px 14px;
-      height: 170px;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
@@ -377,6 +328,8 @@
       text-decoration: none;
       color: inherit;
       overflow: hidden;
+      height: 100%;
+      min-height: 0;
       box-shadow: 0 2px 8px rgba(44, 36, 25, 0.07), inset 0 1px 0 rgba(255, 255, 255, 0.55);
       opacity: 0;
       transform: translateY(12px);
@@ -538,14 +491,14 @@
     }
 
     .status-indicator.up {
-      background-color: #4a7050;
-      box-shadow: 0 0 6px #4a7050;
+      background-color: #7bbf86;
+      box-shadow: 0 0 6px #7bbf86;
       opacity: 1;
     }
 
     .status-indicator.down {
-      background-color: #b84030;
-      box-shadow: 0 0 6px #b84030;
+      background-color: #d9694f;
+      box-shadow: 0 0 6px #d9694f;
       opacity: 1;
     }
 
@@ -571,6 +524,59 @@
       text-transform: uppercase;
       letter-spacing: 0.12em;
       margin-top: 4px;
+    }
+
+    /* ===== LIVE WIDGET (dato en vivo de la propia app) ===== */
+    .card-live {
+      font-family: 'Space Mono', monospace;
+      font-size: 8px;
+      color: var(--green-mid);
+      letter-spacing: 0.06em;
+      margin-top: 5px;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .card-live::before {
+      content: '';
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: var(--card-color, var(--green));
+      box-shadow: 0 0 5px var(--card-color, var(--green));
+      animation: blink 2.5s ease infinite;
+      flex-shrink: 0;
+    }
+
+    /* ===== DESCRIPCIÓN (solo tarjetas grandes) ===== */
+    .card-desc {
+      font-family: 'Inter', sans-serif;
+      font-size: 11px;
+      font-weight: 300;
+      color: var(--ink-mid);
+      line-height: 1.5;
+      margin-top: 8px;
+      max-width: 34ch;
+      transition: color 0.5s;
+    }
+
+    /* ===== TAMAÑOS BENTO ===== */
+    .card--lg { padding: 24px 22px 20px; }
+    .card--lg .card-icon { font-size: 46px; margin-top: 8px; }
+    .card--lg .card-name { font-size: 26px; }
+    .card--lg .card-tag { font-size: 9px; margin-top: 6px; }
+    .card--lg .card-live { font-size: 12px; margin-top: 12px; }
+    .card--lg .card-live::before { width: 7px; height: 7px; }
+    .card--lg .card-arrow { width: 26px; height: 26px; font-size: 12px; bottom: 16px; right: 16px; }
+    .card--lg::before { width: 150px; height: 150px; }
+
+    .card--md .card-icon { font-size: 32px; }
+    .card--md .card-name { font-size: 18px; }
+
+    /* En 1 columna las descripciones podrían apretar: ocultamos en muy estrecho */
+    @media (max-width: 400px) {
+      .card-desc { display: none; }
     }
 
     .card-arrow {
@@ -787,10 +793,9 @@
     <line x1="62" y1="78" x2="108" y2="96" stroke="#b89040" stroke-width="0.5" opacity="0.35" />
   </svg>
 
-  <!-- Controles: lluvia + tema -->
+  <!-- Controles: lluvia -->
   <div class="controls">
     <button class="ctrl-btn" id="sound-btn" title="Lluvia de Utrecht">🔇</button>
-    <button class="ctrl-btn" id="theme-btn" title="Modo oscuro">🌙</button>
   </div>
 
 
@@ -806,171 +811,12 @@
         // <b>recetas</b> · cosmos · código · <b>utrecht</b> · ovnis · <b>juegos</b> · <b>cine</b><br>
         &lt;web&gt; personal · vanilla js · github pages &lt;/web&gt;
       </div>
-      <div class="status-bar" id="status-bar">◉ 12 proyectos · 2 utilidades cargados — press ↵ to explore</div>
+      <div class="status-bar" id="status-bar">◉ cargando proyectos…</div>
     </header>
 
     <div class="rule"></div>
 
-    <div class="grid">
-
-      <a class="card" href="https://zaswear.github.io/mijnutrecht" target="_blank" style="--card-color:#6080a0">
-        <div>
-          <div class="card-num">[01]</div>
-          <div class="card-icon">🌷</div>
-        </div>
-        <div>
-          <div class="card-name">Mijn Utrecht</div>
-          <div class="card-tag">🚲 live · canales</div>
-        </div>
-        <div class="card-arrow">↗</div>
-      </a>
-
-      <a class="card" href="https://zaswear.github.io/weekly-meal-planner/" target="_blank"
-        style="--card-color:#4a7050">
-        <div>
-          <div class="card-num">[02]</div>
-          <div class="card-icon">🌿</div>
-        </div>
-        <div>
-          <div class="card-name">Recetas Semanales</div>
-          <div class="card-tag">🍴 live · recetas</div>
-        </div>
-        <div class="card-arrow">↗</div>
-      </a>
-
-      <a class="card" href="https://pursue-uap-project.github.io/nasaexplorer/en/" target="_blank" style="--card-color:#b89040">
-        <div>
-          <div class="card-num">[03]</div>
-          <div class="card-icon">🪐</div>
-        </div>
-        <div>
-          <div class="card-name">NASA Explorer · UAP</div>
-          <div class="card-tag">🌌 live · space · uap</div>
-        </div>
-        <div class="card-arrow">↗</div>
-      </a>
-
-      <a class="card" href="https://zaswear.github.io/Salud360/" target="_blank" style="--card-color:#6a9472">
-        <div>
-          <div class="card-num">[04]</div>
-          <div class="card-icon">🌱</div>
-        </div>
-        <div>
-          <div class="card-name">Salud360</div>
-          <div class="card-tag">🩺 live · health</div>
-        </div>
-        <div class="card-arrow">↗</div>
-      </a>
-
-      <a class="card" href="https://zaswear.github.io/theartnoveau/" target="_blank" style="--card-color:#8060a0">
-        <div>
-          <div class="card-num">[05]</div>
-          <div class="card-icon">🌸</div>
-        </div>
-        <div>
-          <div class="card-name">Art Noveau</div>
-          <div class="card-tag">✦ live · diseño</div>
-        </div>
-        <div class="card-arrow">↗</div>
-      </a>
-
-      <a class="card" href="https://zaswear.github.io/tengohambre/" target="_blank" style="--card-color:#c4501a">
-        <div>
-          <div class="card-num">[06]</div>
-          <div class="card-icon">🌶️</div>
-        </div>
-        <div>
-          <div class="card-name">Tengo Hambre</div>
-          <div class="card-tag">🍽️ live · restaurantes</div>
-        </div>
-        <div class="card-arrow">↗</div>
-      </a>
-
-      <a class="card" href="https://gamecalendar-iota.vercel.app/" target="_blank" style="--card-color:#7c6af7">
-        <div>
-          <div class="card-num">[07]</div>
-          <div class="card-icon">🎮</div>
-        </div>
-        <div>
-          <div class="card-name">GameCalendar</div>
-          <div class="card-tag">🕹️ live · videojuegos</div>
-        </div>
-        <div class="card-arrow">↗</div>
-      </a>
-
-      <a class="card" href="https://directorscut-five.vercel.app" target="_blank" style="--card-color:#b89040">
-        <div>
-          <div class="card-num">[08]</div>
-          <div class="card-icon">🎬</div>
-        </div>
-        <div>
-          <div class="card-name">Director's Cut</div>
-          <div class="card-tag">🎥 dev · cine</div>
-        </div>
-        <div class="card-arrow">↗</div>
-      </a>
-
-      <a class="card" href="https://cosasdexela.vercel.app" target="_blank" style="--card-color:#b86040">
-        <div>
-          <div class="card-num">[09]</div>
-          <div class="card-icon">🍲</div>
-        </div>
-        <div>
-          <div class="card-name">Cosas de Xela</div>
-          <div class="card-tag">🥘 live · recetas blog</div>
-        </div>
-        <div class="card-arrow">↗</div>
-      </a>
-
-      <a class="card" href="https://checkstatus-eight.vercel.app/" target="_blank" style="--card-color:#8060a0">
-        <div>
-          <div class="card-num">[10]</div>
-          <div class="card-icon">📡</div>
-        </div>
-        <div>
-          <div class="card-name">CheckStatus</div>
-          <div class="card-tag">📊 live · uptime</div>
-        </div>
-        <div class="card-arrow">↗</div>
-      </a>
-
-      <a class="card" href="https://zaswear.github.io/kaktus.dev/" target="_blank" style="--card-color:#4f9d7a">
-        <div>
-          <div class="card-num">[11]</div>
-          <div class="card-icon">🌵</div>
-        </div>
-        <div>
-          <div class="card-name">kaktus.dev</div>
-          <div class="card-tag">✦ live · frontend patterns</div>
-        </div>
-        <div class="card-arrow">↗</div>
-      </a>
-
-      <a class="card card-utility" href="https://reclip-icxk.onrender.com" target="_blank" rel="noopener" style="--card-color:#c87850" aria-label="Abrir ReClip">
-        <div>
-          <div class="card-num">[U1]</div>
-          <div class="card-icon">♪</div>
-        </div>
-        <div>
-          <div class="card-name">ReClip</div>
-          <div class="card-tag">⬇ utilidad · música</div>
-        </div>
-        <div class="card-arrow">↗</div>
-      </a>
-
-      <a class="card card-utility" href="http://localhost:3003" target="_blank" rel="noopener" style="--card-color:#4a7050" aria-label="Abrir MDMakeIt">
-        <div>
-          <div class="card-num">[U2]</div>
-          <div class="card-icon">📝</div>
-        </div>
-        <div>
-          <div class="card-name">MDMakeIt</div>
-          <div class="card-tag">⚙️ local · doc to md</div>
-        </div>
-        <div class="card-arrow">↗</div>
-      </a>
-
-    </div>
+    <div class="grid" id="grid"></div>
 
     <footer>
       <div class="footer-row">
@@ -993,35 +839,8 @@
   </div>
 
   <script>
-    /* ===== DARK MODE ===== */
+    /* ===== ROOT (modo único: sepia profundo) ===== */
     const root = document.documentElement;
-    const themeBtn = document.getElementById('theme-btn');
-
-    (function initTheme() {
-      const saved = localStorage.getItem('zas-theme') || 'light';
-      if (saved === 'dark') root.setAttribute('data-theme', 'dark');
-      syncThemeBtn();
-      syncMetaTheme();
-    })();
-
-    themeBtn.addEventListener('click', () => {
-      const dark = root.getAttribute('data-theme') === 'dark';
-      root.setAttribute('data-theme', dark ? 'light' : 'dark');
-      localStorage.setItem('zas-theme', dark ? 'light' : 'dark');
-      syncThemeBtn();
-      syncMetaTheme();
-    });
-
-    function syncThemeBtn() {
-      const dark = root.getAttribute('data-theme') === 'dark';
-      themeBtn.textContent = dark ? '☀️' : '🌙';
-      themeBtn.title = dark ? 'Modo claro' : 'Modo oscuro';
-    }
-
-    function syncMetaTheme() {
-      const dark = root.getAttribute('data-theme') === 'dark';
-      document.getElementById('meta-theme').content = dark ? '#1c1916' : '#f7f2e8';
-    }
 
     /* ===== SEASONAL THEME ===== */
     const SEASONS = {
@@ -1041,8 +860,7 @@
 
     const season = getSeason();
     root.setAttribute('data-season', season);
-    document.getElementById('status-bar').textContent =
-      `◉ 12 proyectos · 2 utilidades · ${SEASONS[season].icon} ${SEASONS[season].label} · press ↵ to explore`;
+    // El status-bar se rellena en initProjects() (necesita el conteo de projects.json).
 
     /* ===== PARTICLES ===== */
     const canvas = document.getElementById('particle-canvas');
@@ -1163,20 +981,22 @@
     animLoop();
 
     /* ===== CARD WARP ===== */
-    document.querySelectorAll('.card').forEach(card => {
-      card.addEventListener('click', function (e) {
-        if (e.ctrlKey || e.metaKey || e.shiftKey) return;
-        e.preventDefault();
-        const href = this.href;
-        // window.open sincrónico dentro del click handler = no bloqueado por popup blocker
-        const win = window.open('about:blank', '_blank');
-        this.classList.add('warping');
-        setTimeout(() => {
-          if (win) win.location = href; else window.open(href, '_blank');
-          this.classList.remove('warping');
-        }, 320);
+    function setupCardWarp() {
+      document.querySelectorAll('.card').forEach(card => {
+        card.addEventListener('click', function (e) {
+          if (e.ctrlKey || e.metaKey || e.shiftKey) return;
+          e.preventDefault();
+          const href = this.href;
+          // window.open sincrónico dentro del click handler = no bloqueado por popup blocker
+          const win = window.open('about:blank', '_blank');
+          this.classList.add('warping');
+          setTimeout(() => {
+            if (win) win.location = href; else window.open(href, '_blank');
+            this.classList.remove('warping');
+          }, 320);
+        });
       });
-    });
+    }
 
     /* ===== SONIDO AMBIENTE — lluvia de Utrecht (Web Audio API) ===== */
     const soundBtn = document.getElementById('sound-btn');
@@ -1270,7 +1090,7 @@
 
     /* ===== DYNAMIC UPTIME STATUS SYNC ===== */
     async function syncUptime() {
-      const apiEndpoint = "https://checkstatus-five.vercel.app/api/monitors";
+      const apiEndpoint = "https://checkstatus-eight.vercel.app/api/monitors";
       try {
         const res = await fetch(apiEndpoint);
         if (!res.ok) throw new Error(`Fetch failed: ${res.status}`);
@@ -1312,10 +1132,102 @@
       }
     }
     
-    document.addEventListener('DOMContentLoaded', () => {
+    /* ═══════════════════════════════════════════════════════════════════
+       DATA-DRIVEN HUB — los proyectos viven en projects.json
+       Render del grid + tarjetas-widget con dato en vivo de cada app.
+       ═══════════════════════════════════════════════════════════════════ */
+    const GRID = document.getElementById('grid');
+
+    // Escape mínimo para texto inyectado desde el JSON
+    function esc(s) {
+      return String(s).replace(/[&<>"]/g, c => (
+        { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]
+      ));
+    }
+
+    function cardHTML(p, label, i) {
+      const delay = (0.52 + i * 0.06).toFixed(2);
+      const util = p.type === 'utility' ? ' card-utility' : '';
+      const size = ' card--' + (p.size || 'sm');
+      const live = p.widget ? `<div class="card-live" data-live hidden></div>` : '';
+      const desc = p.desc ? `<div class="card-desc">${esc(p.desc)}</div>` : '';
+      return `<a class="card${size}${util}" href="${esc(p.url)}" target="_blank" rel="noopener"
+          style="--card-color:${esc(p.color)}; animation: fadeUp 0.4s ease ${delay}s forwards;"
+          aria-label="Abrir ${esc(p.name)}" data-pid="${esc(p.id)}" data-category="${esc(p.category || '')}">
+        <div>
+          <div class="card-num">[${label}]</div>
+          <div class="card-icon">${esc(p.icon)}</div>
+        </div>
+        <div>
+          <div class="card-name">${esc(p.name)}</div>
+          <div class="card-tag">${esc(p.tag)}</div>
+          ${desc}
+          ${live}
+        </div>
+        <div class="card-arrow">↗</div>
+      </a>`;
+    }
+
+    function renderCards(data) {
+      let proj = 0, util = 0;
+      GRID.innerHTML = data.map((p, i) => {
+        const label = p.type === 'utility'
+          ? 'U' + (++util)
+          : String(++proj).padStart(2, '0');
+        return cardHTML(p, label, i);
+      }).join('');
+      return { proj, util };
+    }
+
+    /* ── WIDGETS: cada tipo devuelve el texto vivo a mostrar en la tarjeta ──
+       Para añadir uno nuevo: implementa WIDGETS[tipo] y declara "widget" en
+       projects.json. Si falla, la tarjeta queda igual (degradación elegante). */
+    const WIDGETS = {
+      async gamecalendar(cfg) {
+        const r = await fetch(cfg.url, { cache: 'no-cache' });
+        if (!r.ok) throw new Error('HTTP ' + r.status);
+        const m = await r.json();
+        const n = (m.total_games || 0).toLocaleString('es-ES');
+        return `${n} juegos indexados`;
+      },
+    };
+
+    async function loadWidgets(data) {
+      await Promise.all(data.map(async (p) => {
+        if (!p.widget || !WIDGETS[p.widget.type]) return;
+        const card = GRID.querySelector(`.card[data-pid="${CSS.escape(p.id)}"]`);
+        const el = card && card.querySelector('[data-live]');
+        if (!el) return;
+        try {
+          el.textContent = await WIDGETS[p.widget.type](p.widget);
+          el.hidden = false;
+        } catch (err) {
+          console.warn('Widget', p.widget.type, 'falló:', err);
+        }
+      }));
+    }
+
+    async function initProjects() {
+      let data;
+      try {
+        data = await (await fetch('projects.json', { cache: 'no-cache' })).json();
+      } catch (err) {
+        GRID.innerHTML = `<p style="grid-column:1/-1;font-family:'Space Mono',monospace;font-size:11px;color:var(--ink-faint);padding:20px">No se pudo cargar projects.json</p>`;
+        console.error('projects.json:', err);
+        return;
+      }
+
+      const { proj, util } = renderCards(data);
+      setupCardWarp();
       syncUptime();
-      setInterval(syncUptime, 5 * 60 * 1000); // 5 min interval
-    });
+      setInterval(syncUptime, 5 * 60 * 1000);
+      loadWidgets(data);
+
+      document.getElementById('status-bar').textContent =
+        `◉ ${proj} proyectos · ${util} utilidades · ${SEASONS[season].icon} ${SEASONS[season].label} · press ↵ to explore`;
+    }
+
+    initProjects();
 
   </script>
 

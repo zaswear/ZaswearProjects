@@ -1,0 +1,142 @@
+[
+  {
+    "id": "mijnutrecht",
+    "name": "Mijn Utrecht",
+    "icon": "🌷",
+    "url": "https://zaswear.github.io/mijnutrecht",
+    "color": "#6080a0",
+    "tag": "🚲 live · canales",
+    "category": "utrecht",
+    "type": "project"
+  },
+  {
+    "id": "weekly-meal-planner",
+    "name": "Recetas Semanales",
+    "icon": "🌿",
+    "url": "https://zaswear.github.io/weekly-meal-planner/",
+    "color": "#4a7050",
+    "tag": "🍴 live · recetas",
+    "category": "comida",
+    "type": "project"
+  },
+  {
+    "id": "nasaexplorer",
+    "name": "NASA Explorer · UAP",
+    "icon": "🪐",
+    "url": "https://pursue-uap-project.github.io/nasaexplorer/en/",
+    "color": "#b89040",
+    "tag": "🌌 live · space · uap",
+    "category": "cosmos",
+    "type": "project"
+  },
+  {
+    "id": "salud360",
+    "name": "Salud360",
+    "icon": "🌱",
+    "url": "https://zaswear.github.io/Salud360/",
+    "color": "#6a9472",
+    "tag": "🩺 live · health",
+    "category": "salud",
+    "type": "project"
+  },
+  {
+    "id": "theartnoveau",
+    "name": "Art Noveau",
+    "icon": "🌸",
+    "url": "https://zaswear.github.io/theartnoveau/",
+    "color": "#8060a0",
+    "tag": "✦ live · diseño",
+    "category": "diseño",
+    "type": "project"
+  },
+  {
+    "id": "tengohambre",
+    "name": "Tengo Hambre",
+    "icon": "🌶️",
+    "url": "https://zaswear.github.io/tengohambre/",
+    "color": "#c4501a",
+    "tag": "🍽️ live · restaurantes",
+    "category": "comida",
+    "type": "project"
+  },
+  {
+    "id": "gamecalendar",
+    "name": "GameCalendar",
+    "icon": "🎮",
+    "url": "https://www.gamecalendar.es/",
+    "color": "#7c6af7",
+    "tag": "🕹️ live · videojuegos",
+    "category": "juegos",
+    "type": "project",
+    "size": "lg",
+    "desc": "Lanzamientos y eventos de videojuegos, semana a semana. Notas de Metacritic y OpenCritic.",
+    "widget": {
+      "type": "gamecalendar",
+      "url": "https://www.gamecalendar.es/db/meta.json"
+    }
+  },
+  {
+    "id": "directorscut",
+    "name": "Director's Cut",
+    "icon": "🎬",
+    "url": "https://directorscut-five.vercel.app",
+    "color": "#b89040",
+    "tag": "🎥 dev · cine",
+    "category": "cine",
+    "type": "project",
+    "size": "lg",
+    "desc": "Mi diario de cine: películas vistas, fichas, notas y recomendaciones."
+  },
+  {
+    "id": "cosasdexela",
+    "name": "Cosas de Xela",
+    "icon": "🍲",
+    "url": "https://cosasdexela.vercel.app",
+    "color": "#b86040",
+    "tag": "🥘 live · recetas blog",
+    "category": "comida",
+    "type": "project"
+  },
+  {
+    "id": "checkstatus",
+    "name": "CheckStatus",
+    "icon": "📡",
+    "url": "https://checkstatus-eight.vercel.app/",
+    "color": "#8060a0",
+    "tag": "📊 live · uptime",
+    "category": "herramientas",
+    "type": "project"
+  },
+  {
+    "id": "kaktus.dev",
+    "name": "kaktus.dev",
+    "icon": "🌵",
+    "url": "https://zaswear.github.io/kaktus.dev/",
+    "color": "#4f9d7a",
+    "tag": "✦ live · frontend patterns",
+    "category": "dev",
+    "type": "project",
+    "size": "lg",
+    "desc": "38 patrones interactivos de frontend con Web APIs nativas y CSS moderno."
+  },
+  {
+    "id": "reclip",
+    "name": "ReClip",
+    "icon": "♪",
+    "url": "https://reclip-icxk.onrender.com",
+    "color": "#c87850",
+    "tag": "⬇ utilidad · música",
+    "category": "herramientas",
+    "type": "utility"
+  },
+  {
+    "id": "mdmakeit",
+    "name": "MDMakeIt",
+    "icon": "📝",
+    "url": "http://localhost:3003",
+    "color": "#4a7050",
+    "tag": "⚙️ local · doc to md",
+    "category": "herramientas",
+    "type": "utility"
+  }
+]
