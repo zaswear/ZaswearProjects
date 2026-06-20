@@ -138,5 +138,17 @@
     "tag": "⚙️ local · doc to md",
     "category": "herramientas",
     "type": "utility"
+  },
+  {
+    "id": "chronos-rss",
+    "name": "Chronos RSS",
+    "icon": "⏳",
+    "url": "https://zaswear.github.io/chronos-rss/",
+    "color": "#c25b38",
+    "tag": "📰 live · rss",
+    "category": "herramientas",
+    "type": "project",
+    "size": "lg",
+    "desc": "Lector de feeds RSS minimalista con estética de periódico retro-futurista y motor de traducción automática al español."
   }
 ]

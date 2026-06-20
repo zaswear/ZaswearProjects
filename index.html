@@ -1179,6 +1179,80 @@
       return { proj, util };
     }
 
+    /* ── BENTO AUTO-FILL ──────────────────────────────────────────────────
+       Coloca las fichas (dense first-fit) y luego rellena cualquier hueco
+       haciendo crecer la ficha vecina menos disruptiva, para que el bento
+       acabe SIEMPRE como un rectángulo lleno (sin fichas sobresaliendo). */
+    const SIZE_WH = { lg: [2, 2], md: [2, 1], sm: [1, 1] };
+
+    function packBento(items, cols) {
+      const grid = [];
+      const place = [];
+      const row = r => grid[r] || (grid[r] = new Array(cols).fill(-1));
+      const free = (r, c, w, h) => {
+        if (c < 0 || r < 0 || w <= 0 || h <= 0 || c + w > cols) return false;
+        for (let y = r; y < r + h; y++) {
+          const g = grid[y];
+          if (g) for (let x = c; x < c + w; x++) if (g[x] !== -1) return false;
+        }
+        return true;
+      };
+      const set = (r, c, w, h, i) => {
+        for (let y = r; y < r + h; y++) { row(y); for (let x = c; x < c + w; x++) grid[y][x] = i; }
+      };
+
+      // 1) Colocación dense (primer hueco libre, fila por fila)
+      items.forEach((it, i) => {
+        const w = Math.max(1, Math.min(it.w, cols)), h = Math.max(1, it.h);
+        let r = 0;
+        for (; ;) {
+          row(r);
+          let done = false;
+          for (let c = 0; c <= cols - w; c++) {
+            if (free(r, c, w, h)) { set(r, c, w, h, i); place[i] = { r, c, w, h }; done = true; break; }
+          }
+          if (done) break;
+          r++;
+        }
+      });
+
+      // 2) Rellenar huecos del rectángulo R×cols creciendo el vecino óptimo
+      const R = grid.length;
+      for (let r = 0; r < R; r++) {
+        row(r);
+        for (let c = 0; c < cols; c++) {
+          if (grid[r][c] !== -1) continue;
+          const cands = [];
+          if (c > 0 && grid[r][c - 1] !== -1) { const i = grid[r][c - 1], p = place[i]; if (free(p.c + p.w, p.r, 1, p.h)) cands.push({ nw: p.w + 1, nh: p.h, apply: () => { set(p.c + p.w, p.r, 1, p.h, i); p.w++; } }); }
+          if (r > 0 && grid[r - 1][c] !== -1) { const i = grid[r - 1][c], p = place[i]; if (free(p.c, p.r + p.h, p.w, 1)) cands.push({ nw: p.w, nh: p.h + 1, apply: () => { set(p.c, p.r + p.h, p.w, 1, i); p.h++; } }); }
+          if (c < cols - 1 && grid[r][c + 1] !== -1) { const i = grid[r][c + 1], p = place[i]; if (free(c, p.r, 1, p.h)) cands.push({ nw: p.w + 1, nh: p.h, apply: () => { set(c, p.r, 1, p.h, i); p.c = c; p.w++; } }); }
+          if (r < R - 1 && grid[r + 1] && grid[r + 1][c] !== -1) { const i = grid[r + 1][c], p = place[i]; if (free(p.c, r, p.w, 1)) cands.push({ nw: p.w, nh: p.h + 1, apply: () => { set(p.c, r, p.w, 1, i); p.r = r; p.h++; } }); }
+          if (cands.length) {
+            cands.sort((a, b) => Math.max(a.nw, a.nh) - Math.max(b.nw, b.nh) || (a.nw * a.nh) - (b.nw * b.nh));
+            cands[0].apply();
+          }
+        }
+      }
+      return place;
+    }
+
+    function relayout() {
+      const cards = [...GRID.querySelectorAll('.card')];
+      if (!cards.length) return;
+      const cols = (getComputedStyle(GRID).gridTemplateColumns.match(/\S+/g) || ['x']).length;
+      const items = cards.map(el => {
+        const s = el.classList.contains('card--lg') ? 'lg' : el.classList.contains('card--md') ? 'md' : 'sm';
+        return { w: SIZE_WH[s][0], h: SIZE_WH[s][1] };
+      });
+      const place = packBento(items, cols);
+      cards.forEach((el, i) => {
+        const p = place[i];
+        if (!p) return;
+        el.style.gridColumn = `${p.c + 1} / span ${p.w}`;
+        el.style.gridRow = `${p.r + 1} / span ${p.h}`;
+      });
+    }
+
     /* ── WIDGETS: cada tipo devuelve el texto vivo a mostrar en la tarjeta ──
        Para añadir uno nuevo: implementa WIDGETS[tipo] y declara "widget" en
        projects.json. Si falla, la tarjeta queda igual (degradación elegante). */
@@ -1218,6 +1292,9 @@
       }
 
       const { proj, util } = renderCards(data);
+      relayout();
+      let rt;
+      window.addEventListener('resize', () => { clearTimeout(rt); rt = setTimeout(relayout, 150); });
       setupCardWarp();
       syncUptime();
       setInterval(syncUptime, 5 * 60 * 1000);
