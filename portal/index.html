@@ -294,11 +294,11 @@
     /* ===== BENTO GRID ===== */
     .grid {
       display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      grid-auto-rows: 152px;
+      grid-template-columns: repeat(4, 1fr);
+      grid-auto-rows: 112px;
       grid-auto-flow: row dense;
-      gap: 12px;
-      padding: 20px 16px 12px;
+      gap: 10px;
+      padding: 18px 16px 12px;
     }
 
     /* Spans por tamaño (lo asigna projects.json → .card--lg/md/sm) */
@@ -306,12 +306,20 @@
     .card--md { grid-column: span 2; grid-row: span 1; }
     .card--sm { grid-column: span 1; grid-row: span 1; }
 
+    @media (min-width: 1200px) {
+      .grid { grid-template-columns: repeat(5, 1fr); }
+    }
+
+    @media (max-width: 900px) {
+      .grid { grid-template-columns: repeat(3, 1fr); }
+    }
+
     @media (max-width: 600px) {
       .grid { grid-template-columns: repeat(2, 1fr); }
     }
 
     @media (max-width: 400px) {
-      .grid { grid-template-columns: 1fr; grid-auto-rows: 150px; }
+      .grid { grid-template-columns: 1fr; grid-auto-rows: 128px; }
       .card--lg, .card--md { grid-column: span 1; }
       .card--lg { grid-row: span 2; }
     }
@@ -320,8 +328,8 @@
       position: relative;
       background: var(--cream-soft);
       border: 1px solid var(--cream-border);
-      border-radius: 20px;
-      padding: 16px 14px 14px;
+      border-radius: 15px;
+      padding: 12px 12px 11px;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
@@ -530,12 +538,12 @@
     }
 
     .card-icon {
-      width: 50px;
-      height: 50px;
-      border-radius: 15px;
+      width: 40px;
+      height: 40px;
+      border-radius: 12px;
       display: grid;
       place-items: center;
-      font-size: 26px;
+      font-size: 22px;
       line-height: 1;
       background: color-mix(in srgb, var(--card-color, var(--green)) 14%, transparent);
       border: 1px solid color-mix(in srgb, var(--card-color, var(--green)) 20%, transparent);
@@ -543,7 +551,7 @@
 
     .card-name {
       font-family: 'Space Grotesk', sans-serif;
-      font-size: 15px;
+      font-size: 14px;
       font-weight: 600;
       line-height: 1.2;
       color: var(--ink);
@@ -595,17 +603,17 @@
     }
 
     /* ===== TAMAÑOS BENTO ===== */
-    .card--lg { padding: 24px 22px 20px; }
-    .card--lg .card-icon { width: 64px; height: 64px; border-radius: 17px; font-size: 33px; }
-    .card--lg .card-name { font-size: 26px; }
-    .card--lg .card-tag { font-size: 9px; margin-top: 6px; }
-    .card--lg .card-live { font-size: 12px; margin-top: 12px; }
-    .card--lg .card-live::before { width: 7px; height: 7px; }
-    .card--lg .card-arrow { width: 26px; height: 26px; font-size: 12px; bottom: 16px; right: 16px; }
-    .card--lg::before { width: 150px; height: 150px; }
+    .card--lg { padding: 16px 15px 13px; }
+    .card--lg .card-icon { width: 48px; height: 48px; border-radius: 14px; font-size: 25px; }
+    .card--lg .card-name { font-size: 19px; }
+    .card--lg .card-tag { font-size: 9px; margin-top: 5px; }
+    .card--lg .card-live { font-size: 10px; margin-top: 9px; }
+    .card--lg .card-live::before { width: 6px; height: 6px; }
+    .card--lg .card-arrow { width: 22px; height: 22px; font-size: 11px; bottom: 12px; right: 12px; }
+    .card--lg::before { width: 120px; height: 120px; }
 
-    .card--md .card-icon { width: 56px; height: 56px; font-size: 30px; }
-    .card--md .card-name { font-size: 18px; }
+    .card--md .card-icon { width: 44px; height: 44px; font-size: 24px; }
+    .card--md .card-name { font-size: 16px; }
 
     /* En 1 columna las descripciones podrían apretar: ocultamos en muy estrecho */
     @media (max-width: 400px) {
