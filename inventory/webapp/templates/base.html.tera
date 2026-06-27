@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}dev-nexus // Inventario Técnico{% endblock %}</title>
+    <!-- PWA Settings -->
+    <link rel="manifest" href="/manifest.json">
+    <meta name="theme-color" content="#0d0e12">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <link rel="apple-touch-icon" href="/static/icon-192.png">
+    <!-- Google Fonts: Inter & JetBrains Mono -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- FontAwesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Marked.js Markdown parser -->
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <!-- Github Markdown CSS for premium README rendering -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/github-markdown-css/5.5.0/github-markdown.min.css">
+    
+    <style>
+        :root {
+            --bg-color: #0d0e12;
+            --panel-bg: #151820;
+            --border-color: #262a35;
+            --text-primary: #e6edf3;
+            --text-secondary: #8b949e;
+            --accent-color: #38bdf8;
+            --accent-hover: #0ea5e9;
+            --accent-dim: rgba(56, 189, 248, 0.1);
+            --code-bg: #07090e;
+            --border-radius: 4px;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-primary);
+            min-height: 100vh;
+            line-height: 1.5;
+            padding: 1.5rem;
+        }
+
+        .container {
+            max-width: 1280px;
+            margin: 0 auto;
+        }
+
+        /* Toolbar Header style */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            padding: 0.75rem 1.25rem;
+            background: var(--panel-bg);
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius);
+        }
+
+        .logo-area {
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .logo-icon {
+            font-size: 1.25rem;
+            color: var(--accent-color);
+        }
+
+        .logo-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            color: #ffffff;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 0.75rem;
+        }
+
+        /* Tech Flat Button */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            padding: 0.45rem 0.9rem;
+            border-radius: var(--border-radius);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85rem;
+            font-weight: 500;
+            text-decoration: none;
+            transition: all 0.15s ease;
+            cursor: pointer;
+            border: 1px solid var(--border-color);
+        }
+
+        .btn-primary {
+            background: var(--accent-color);
+            color: #000000;
+            border-color: var(--accent-color);
+        }
+
+        .btn-primary:hover {
+            background: var(--accent-hover);
+            border-color: var(--accent-hover);
+        }
+
+        .btn-secondary {
+            background: #1c212c;
+            color: var(--text-primary);
+        }
+
+        .btn-secondary:hover {
+            background: #252b39;
+            border-color: #3b4455;
+        }
+
+        /* Solid Flat Panels */
+        .glass-panel {
+            background: var(--panel-bg);
+            border-radius: var(--border-radius);
+            border: 1px solid var(--border-color);
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .footer {
+            margin-top: 3rem;
+            text-align: center;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            border-top: 1px solid var(--border-color);
+            padding-top: 1.25rem;
+        }
+
+        .footer a {
+            color: var(--accent-color);
+            text-decoration: none;
+        }
+
+        .footer a:hover {
+            text-decoration: underline;
+        }
+
+        /* Markdown Overrides to match Github Dark Minimalist */
+        .markdown-body {
+            background-color: transparent !important;
+            color: var(--text-primary) !important;
+            font-family: inherit !important;
+        }
+        .markdown-body h1, .markdown-body h2, .markdown-body h3, .markdown-body h4, .markdown-body h5, .markdown-body h6 {
+            color: #ffffff !important;
+            border-bottom-color: var(--border-color) !important;
+            font-family: inherit !important;
+        }
+        .markdown-body code {
+            background-color: rgba(255, 255, 255, 0.05) !important;
+            color: #f472b6 !important;
+            font-family: 'JetBrains Mono', monospace !important;
+            font-size: 85% !important;
+            padding: 0.2em 0.4em !important;
+            border-radius: 3px !important;
+        }
+        .markdown-body pre {
+            background-color: var(--code-bg) !important;
+            border: 1px solid var(--border-color) !important;
+            border-radius: var(--border-radius) !important;
+        }
+        .markdown-body pre code {
+            background-color: transparent !important;
+            color: #e6edf3 !important;
+            font-size: 85% !important;
+            padding: 0 !important;
+        }
+        .markdown-body table tr {
+            background-color: rgba(255, 255, 255, 0.01) !important;
+            border-top-color: var(--border-color) !important;
+        }
+        .markdown-body table tr:nth-child(2n) {
+            background-color: rgba(255, 255, 255, 0.02) !important;
+        }
+        .markdown-body table td, .markdown-body table th {
+            border-color: var(--border-color) !important;
+            color: var(--text-primary) !important;
+        }
+        .markdown-body a {
+            color: var(--accent-color) !important;
+        }
+        .markdown-body a:hover {
+            text-decoration: underline !important;
+        }
+    </style>
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="logo-area">
+                <i class="fa-solid fa-code logo-icon"></i>
+                <span class="logo-title">dev-nexus_</span>
+            </div>
+            <div class="nav-links">
+                <a href="/" class="btn btn-secondary"><i class="fa-solid fa-house"></i> list</a>
+            </div>
+        </header>
+
+        <main>
+            {% block content %}{% endblock %}
+        </main>
+
+        <footer class="footer">
+            <p>radar_v1.1 // local dev dashboard // zaswear</p>
+        </footer>
+    </div>
+    
+    <!-- PWA Service Worker Registration -->
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/service-worker.js')
+                    .then((reg) => console.log('PWA Service Worker registered successfully.', reg))
+                    .catch((err) => console.error('PWA Service Worker registration failed.', err));
+            });
+        }
+    </script>
+</body>
+</html>

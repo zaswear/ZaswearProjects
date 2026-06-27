@@ -1,0 +1,607 @@
+{% extends "base" %}
+
+{% block title %}dev-nexus_ // {{ project.name }} {% endblock %}
+
+{% block extra_css %}
+<style>
+    .detail-layout {
+        display: grid;
+        grid-template-columns: 260px 1fr;
+        gap: 1.5rem;
+        align-items: start;
+    }
+
+    @media (max-width: 900px) {
+        .detail-layout {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    /* Bento-style Sidebar */
+    .sidebar {
+        background: var(--panel-bg);
+        border: 1px solid var(--border-color);
+        border-radius: var(--border-radius);
+        padding: 1.25rem;
+    }
+
+    .sidebar-title {
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 0.95rem;
+        font-weight: 600;
+        margin-bottom: 1.25rem;
+        color: #ffffff;
+        border-bottom: 1px solid var(--border-color);
+        padding-bottom: 0.5rem;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+    }
+
+    .meta-item {
+        margin-bottom: 1.25rem;
+        font-size: 0.85rem;
+    }
+
+    .meta-label {
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 0.75rem;
+        text-transform: lowercase;
+        color: var(--text-secondary);
+        font-weight: 500;
+        margin-bottom: 0.25rem;
+    }
+
+    .meta-value {
+        color: var(--text-primary);
+        word-break: break-all;
+    }
+
+    .meta-value a {
+        color: var(--accent-color);
+        text-decoration: none;
+        font-family: 'JetBrains Mono', monospace;
+    }
+
+    .meta-value a:hover {
+        text-decoration: underline;
+    }
+
+    .status-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.3rem;
+        padding: 0.15rem 0.4rem;
+        border-radius: 2px;
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 0.75rem;
+        border: 1px solid transparent;
+    }
+
+    .status-active {
+        background: rgba(56, 189, 248, 0.05);
+        color: var(--accent-color);
+        border-color: rgba(56, 189, 248, 0.15);
+    }
+
+    .status-inactive {
+        background: rgba(255, 255, 255, 0.02);
+        color: var(--text-secondary);
+        border-color: var(--border-color);
+    }
+
+    /* Tabs (VS Code Editor Style) */
+    .tabs-container {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+        min-width: 0; /* Prevents grid blowout from pre blocks/tables */
+    }
+
+    .tab-buttons {
+        display: flex;
+        background: #090a0e;
+        border: 1px solid var(--border-color);
+        border-radius: var(--border-radius) var(--border-radius) 0 0;
+        overflow-x: auto;
+        white-space: nowrap;
+    }
+
+    .tab-btn {
+        background: transparent;
+        border: none;
+        border-right: 1px solid var(--border-color);
+        color: var(--text-secondary);
+        padding: 0.6rem 1.2rem;
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 0.8rem;
+        cursor: pointer;
+        transition: all 0.1s ease;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.4rem;
+        position: relative;
+    }
+
+    .tab-btn:hover {
+        color: #ffffff;
+        background: rgba(255, 255, 255, 0.02);
+    }
+
+    .tab-btn.active {
+        color: #ffffff;
+        background: var(--panel-bg);
+        border-bottom: 2px solid var(--accent-color);
+    }
+
+    .tab-pane {
+        border-radius: 0 0 var(--border-radius) var(--border-radius);
+        border-top: none;
+        margin-top: -11px; /* Overlap active tab border precisely */
+    }
+
+    .tab-content {
+        display: none;
+    }
+
+    .tab-content.active {
+        display: block;
+    }
+
+
+    /* Console Terminal Styling */
+    .terminal-box {
+        background: var(--code-bg);
+        border: 1px solid var(--border-color);
+        border-radius: var(--border-radius);
+        font-family: 'JetBrains Mono', monospace;
+        padding: 1rem;
+        margin-top: 0.5rem;
+        margin-bottom: 1rem;
+        position: relative;
+        overflow-x: auto;
+    }
+
+    .terminal-header {
+        position: absolute;
+        top: 0.4rem;
+        right: 0.5rem;
+        display: flex;
+        align-items: center;
+    }
+
+    .copy-btn {
+        background: rgba(255, 255, 255, 0.02);
+        border: 1px solid var(--border-color);
+        color: var(--text-secondary);
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 0.7rem;
+        padding: 0.2rem 0.40rem;
+        border-radius: 2px;
+        cursor: pointer;
+        transition: all 0.15s ease;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.2rem;
+    }
+
+    .copy-btn:hover {
+        background: var(--accent-color);
+        color: #000000;
+        border-color: var(--accent-color);
+    }
+
+    .terminal-line {
+        color: #e6edf3;
+        line-height: 1.4;
+        font-size: 0.85rem;
+        white-space: pre;
+    }
+
+    .terminal-line::before {
+        content: "$ ";
+        color: var(--text-secondary);
+        font-weight: 500;
+    }
+
+    /* Minimalist Technical Banners */
+    .info-banner {
+        padding: 0.75rem 1rem;
+        border-radius: var(--border-radius);
+        margin-bottom: 1rem;
+        font-size: 0.85rem;
+        display: flex;
+        align-items: flex-start;
+        gap: 0.6rem;
+        line-height: 1.4;
+        border: 1px solid var(--border-color);
+    }
+
+    .banner-success {
+        background: rgba(56, 189, 248, 0.03);
+        border-left: 3px solid var(--accent-color);
+        color: #e6edf3;
+    }
+
+    .banner-warning {
+        background: rgba(255, 255, 255, 0.01);
+        border-left: 3px solid var(--text-secondary);
+        color: var(--text-secondary);
+    }
+
+    /* Grayscale Technical Error Cards */
+    .error-card {
+        background: #0d0e12;
+        border: 1px solid var(--border-color);
+        border-radius: var(--border-radius);
+        padding: 1.25rem;
+        margin-bottom: 1rem;
+    }
+
+    .error-card-title {
+        font-family: 'JetBrains Mono', monospace;
+        font-weight: 600;
+        font-size: 0.95rem;
+        color: #ffffff;
+        margin-bottom: 0.75rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+    }
+
+    .error-meta {
+        font-size: 0.75rem;
+        color: var(--text-secondary);
+        border: 1px solid var(--border-color);
+        padding: 0.1rem 0.35rem;
+        border-radius: 2px;
+        background: var(--panel-bg);
+    }
+
+    .error-section {
+        margin-bottom: 0.75rem;
+        font-size: 0.85rem;
+    }
+
+    .error-label {
+        font-family: 'JetBrains Mono', monospace;
+        font-weight: 500;
+        color: var(--text-secondary);
+        margin-bottom: 0.15rem;
+        font-size: 0.75rem;
+        text-transform: lowercase;
+    }
+
+    .error-text-yellow {
+        color: #fbd561;
+        font-family: 'JetBrains Mono', monospace;
+    }
+
+    .error-text-green {
+        color: #34d399;
+    }
+
+    /* Markdown pre copy button positioning */
+    .markdown-body pre {
+        position: relative;
+    }
+    .markdown-body pre .pre-copy-btn {
+        position: absolute;
+        top: 0.4rem;
+        right: 0.4rem;
+        opacity: 0;
+        transition: opacity 0.15s ease;
+    }
+    .markdown-body pre:hover .pre-copy-btn {
+        opacity: 1;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="glass-panel" style="margin-bottom: 1.5rem; padding: 1.25rem;">
+    <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
+        <div>
+            <h1 style="font-size: 1.5rem; font-weight: 700; font-family: 'JetBrains Mono', monospace; margin-bottom: 0.2rem;">{{ project.name }}</h1>
+            <p style="color: var(--text-secondary); font-family: 'JetBrains Mono', monospace; font-size: 0.8rem;">
+                <i class="fa-solid fa-terminal" style="font-size: 0.75rem;"></i> inspect {{ project.path }}
+            </p>
+        </div>
+        <a href="/" class="btn btn-secondary">
+            <i class="fa-solid fa-arrow-left"></i> back_
+        </a>
+    </div>
+</div>
+
+<div class="detail-layout">
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <h2 class="sidebar-title">sys_info_</h2>
+        
+        <div class="meta-item">
+            <div class="meta-label">language</div>
+            <div class="meta-value" style="font-family: 'JetBrains Mono', monospace; font-weight: 500;">{{ project.language | default(value="N/A") }}</div>
+        </div>
+
+        <div class="meta-item">
+            <div class="meta-label">runtime_version</div>
+            <div class="meta-value">
+                {% if project.runtimes != "N/A" %}
+                    <span class="status-badge status-active">{{ project.runtimes }}</span>
+                {% else %}
+                    <span class="status-badge status-inactive">N/A</span>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="meta-item">
+            <div class="meta-label">git_remote</div>
+            <div class="meta-value">
+                {% if project.repo_url != "N/A" %}
+                    <a href="{{ project.repo_url }}" target="_blank">
+                        git_origin_url
+                    </a>
+                {% else %}
+                    <span style="color: var(--text-secondary);">-</span>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="meta-item">
+            <div class="meta-label">docker_env</div>
+            <div class="meta-value">
+                {% if project.docker_info != "Sin Dockerfile" %}
+                    <span class="status-badge status-active">
+                        dockerfile_ok
+                    </span>
+                {% else %}
+                    <span class="status-badge status-inactive">-</span>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="meta-item">
+            <div class="meta-label">env_configs</div>
+            <div class="meta-value">
+                {% if project.env_vars != "No .env" %}
+                    <span class="status-badge status-active">
+                        .env_ok
+                    </span>
+                {% else %}
+                    <span class="status-badge status-inactive">-</span>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="meta-item">
+            <div class="meta-label">ci_pipelines</div>
+            <div class="meta-value">
+                {% if project.ci_workflows != "N/A" %}
+                    <div style="display:flex; flex-direction:column; gap:0.25rem;">
+                        {% for wf in project.ci_workflows | split(pat=";") %}
+                            <span style="font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; color: var(--text-primary);">
+                                [wf] {{ wf | trim }}
+                            </span>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <span style="color: var(--text-secondary);">-</span>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content Tabs -->
+    <div class="tabs-container">
+        <div class="tab-buttons">
+            <button class="tab-btn active" onclick="switchTab(event, 'tab-readme')">
+                README.md
+            </button>
+            <button class="tab-btn" onclick="switchTab(event, 'tab-commands')">
+                local_commands_
+            </button>
+            <button class="tab-btn" onclick="switchTab(event, 'tab-tests')">
+                workflow_tests_
+            </button>
+            <button class="tab-btn" onclick="switchTab(event, 'tab-errors')">
+                bugs_
+                {% if project.errors_logged | length > 0 %}
+                    <span style="color:#f87171; font-family:'JetBrains Mono',monospace; font-size:0.75rem;">[{{ project.errors_logged | length }}]</span>
+                {% endif %}
+            </button>
+        </div>
+
+        <!-- README Tab -->
+        <div id="tab-readme" class="tab-content active glass-panel tab-pane">
+            <div id="readme-container" class="markdown-body">
+                <p style="color: var(--text-secondary); font-family: 'JetBrains Mono', monospace;">loading...</p>
+            </div>
+        </div>
+
+        <!-- Local Setup / Commands Tab -->
+        <div id="tab-commands" class="tab-content glass-panel tab-pane">
+            <h2 style="font-family: 'JetBrains Mono', monospace; font-size: 1.1rem; font-weight: 600; margin-bottom: 1rem; color: #ffffff;">local_setup_manual_</h2>
+            <div id="setup-container" class="markdown-body">
+                <p style="color: var(--text-secondary); font-family: 'JetBrains Mono', monospace;">loading...</p>
+            </div>
+        </div>
+
+        <!-- Workflow Tests Tab -->
+        <div id="tab-tests" class="tab-content glass-panel tab-pane">
+            <h2 style="font-family: 'JetBrains Mono', monospace; font-size: 1.1rem; font-weight: 600; margin-bottom: 1.25rem; color: #ffffff;">local_workflow_validation_</h2>
+            
+            {% if project.workflow_tests | length > 0 %}
+                {% for test in project.workflow_tests %}
+                    <div style="margin-bottom: 2rem; border-bottom: 1px solid var(--border-color); padding-bottom: 1.5rem;">
+                        <h3 style="font-family: 'JetBrains Mono', monospace; font-size: 0.95rem; font-weight: 600; color: #ffffff; display: flex; align-items: center; gap: 0.4rem; margin-bottom: 0.75rem;">
+                            <i class="fa-solid fa-play" style="color: var(--accent-color); font-size: 0.8rem;"></i>
+                            target: {{ test.name }}
+                        </h3>
+                        
+                        {% if test.success_criteria %}
+                            <div class="info-banner banner-success">
+                                <i class="fa-solid fa-circle-info" style="font-size: 0.95rem; margin-top: 0.1rem; color: var(--accent-color);"></i>
+                                <div>
+                                    <span style="font-family: 'JetBrains Mono', monospace; font-weight: 500; font-size: 0.75rem; text-transform: uppercase;">success_criteria:</span> {{ test.success_criteria }}
+                                </div>
+                            </div>
+                        {% endif %}
+
+                        {% if test.commands | length > 0 %}
+                            <div class="terminal-box">
+                                <div class="terminal-header">
+                                    <button class="copy-btn" onclick="copyTerminalText(this)">
+                                        copy_
+                                    </button>
+                                </div>
+                                {% for cmd in test.commands %}
+                                    <div class="terminal-line">{{ cmd }}</div>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+                {% endfor %}
+            {% else %}
+                <div class="info-banner banner-warning">
+                    <i class="fa-solid fa-circle-info" style="font-size: 0.95rem;"></i>
+                    <div style="font-family: 'JetBrains Mono', monospace; font-size: 0.8rem;">
+                        no workflow tests defined in workflow-tests.md for this target.
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+
+        <!-- Errors Tab -->
+        <div id="tab-errors" class="tab-content glass-panel tab-pane">
+            <h2 style="font-family: 'JetBrains Mono', monospace; font-size: 1.1rem; font-weight: 600; margin-bottom: 1.25rem; color: #ffffff;">incident_report_log_</h2>
+            
+            {% if project.errors_logged | length > 0 %}
+                {% for err in project.errors_logged %}
+                    <div class="error-card">
+                        <div class="error-card-title">
+                            <span>
+                                <i class="fa-solid fa-bug" style="margin-right: 0.4rem; color: #f87171;"></i>
+                                {{ err.error }}
+                            </span>
+                            <span class="error-meta">
+                                {{ err.date }} // wf: {{ err.workflow }}
+                            </span>
+                        </div>
+                        
+                        <div class="error-section">
+                            <div class="error-label">root_cause_</div>
+                            <div class="error-text-yellow">{{ err.cause }}</div>
+                        </div>
+                        
+                        <div class="error-section" style="margin-bottom: 0;">
+                            <div class="error-label">patch_rule_</div>
+                            <div class="error-text-green">{{ err.rule }}</div>
+                        </div>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <div class="info-banner banner-success" style="border-left-color: #34d399;">
+                    <i class="fa-solid fa-circle-check" style="font-size: 0.95rem; color: #34d399;"></i>
+                    <div style="font-family: 'JetBrains Mono', monospace; font-size: 0.8rem;">
+                        0 incidents registered. code state: optimal.
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<script>
+    // Tab switching logic
+    function switchTab(evt, tabId) {
+        const contents = document.querySelectorAll('.tab-content');
+        contents.forEach(content => content.classList.remove('active'));
+        
+        const buttons = document.querySelectorAll('.tab-btn');
+        buttons.forEach(btn => btn.classList.remove('active'));
+        
+        document.getElementById(tabId).classList.add('active');
+        evt.currentTarget.classList.add('active');
+    }
+
+    // Copy commands inside terminal blocks
+    function copyTerminalText(btn) {
+        const terminalBox = btn.closest('.terminal-box');
+        const lines = terminalBox.querySelectorAll('.terminal-line');
+        const commands = Array.from(lines).map(line => line.textContent).join('\n');
+        
+        navigator.clipboard.writeText(commands).then(() => {
+            const originalHTML = btn.innerHTML;
+            btn.innerHTML = 'copied_';
+            btn.style.background = 'var(--accent-color)';
+            btn.style.color = '#000000';
+            btn.style.borderColor = 'var(--accent-color)';
+            setTimeout(() => {
+                btn.innerHTML = originalHTML;
+                btn.style.background = '';
+                btn.style.color = '';
+                btn.style.borderColor = '';
+            }, 1500);
+        }).catch(err => {
+            console.error('Error: ', err);
+        });
+    }
+
+    // Setup copy button helpers inside custom pre blocks for markdown
+    function addPreCopyButtons() {
+        const containers = ['readme-container', 'setup-container'];
+        containers.forEach(containerId => {
+            const container = document.getElementById(containerId);
+            if (!container) return;
+            const preBlocks = container.querySelectorAll('pre');
+            preBlocks.forEach(pre => {
+                const codeBlock = pre.querySelector('code');
+                if (!codeBlock) return;
+                
+                const copyBtn = document.createElement('button');
+                copyBtn.className = 'copy-btn pre-copy-btn';
+                copyBtn.innerHTML = 'copy_';
+                copyBtn.title = 'Copy code block';
+                
+                copyBtn.addEventListener('click', () => {
+                    navigator.clipboard.writeText(codeBlock.textContent).then(() => {
+                        copyBtn.innerHTML = 'copied_';
+                        copyBtn.style.color = 'var(--accent-color)';
+                        setTimeout(() => {
+                            copyBtn.innerHTML = 'copy_';
+                            copyBtn.style.color = '';
+                        }, 1500);
+                    });
+                });
+                
+                pre.appendChild(copyBtn);
+            });
+        });
+    }
+
+    // Client-side markdown rendering with Marked.js
+    document.addEventListener("DOMContentLoaded", () => {
+        // Render README
+        const rawReadme = {{ project.readme_content | default(value="") | json_encode | safe }};
+        const readmeContainer = document.getElementById('readme-container');
+        if (rawReadme && rawReadme.trim()) {
+            readmeContainer.innerHTML = marked.parse(rawReadme);
+        } else {
+            readmeContainer.innerHTML = '<div class="info-banner banner-warning"><div style="font-family:\'JetBrains Mono\',monospace; font-size:0.8rem;">no README.md file found in repository root.</div></div>';
+        }
+
+        // Render Setup / Local actions
+        const rawSetup = {{ project.local_setup | default(value="") | json_encode | safe }};
+        const setupContainer = document.getElementById('setup-container');
+        if (rawSetup && rawSetup.trim()) {
+            setupContainer.innerHTML = marked.parse(rawSetup);
+        } else {
+            setupContainer.innerHTML = '<div class="info-banner banner-warning"><div style="font-family:\'JetBrains Mono\',monospace; font-size:0.8rem;">no local development commands defined in actions-local.md.</div></div>';
+        }
+
+        // Add copy buttons to pre blocks inside markdown
+        setTimeout(addPreCopyButtons, 100);
+    });
+</script>
+{% endblock %}

@@ -1,6 +1,6 @@
 {
-  "name": "ZasProjects",
-  "short_name": "ZasProjects",
+  "name": "dev-nexus",
+  "short_name": "dev-nexus",
   "description": "Mis proyectos web - zaswear",
   "start_url": "./index.html",
   "display": "standalone",

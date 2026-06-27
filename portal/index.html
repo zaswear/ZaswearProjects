@@ -8,9 +8,9 @@
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
-  <meta name="apple-mobile-web-app-title" content="ZasProjects">
+  <meta name="apple-mobile-web-app-title" content="dev-nexus">
   <meta name="description" content="Proyectos web de zaswear">
-  <title>ZasProjects · zaswear</title>
+  <title>dev-nexus · zaswear</title>
   <link rel="manifest" href="manifest.json">
   <!-- Favicon: hoja SVG personalizada -->
   <link rel="icon"
@@ -1089,46 +1089,95 @@
     });
 
     /* ===== DYNAMIC UPTIME STATUS SYNC ===== */
-    async function syncUptime() {
-      const apiEndpoint = "https://checkstatus-eight.vercel.app/api/monitors";
+    /* ===== DYNAMIC UPTIME STATUS SYNC & LOCALHOST PORT CHECK ===== */
+    const LOCAL_PORTS = {
+      "3DPrintRadar": 8000,
+      "gamecalendar": 8003,
+      "mdmakeit": 8004,
+      "reclip": 8005,
+      "checkstatus": 8006,
+      "salud360": 8008,
+      "zaswear-nexus": 8002,
+      "inventory": 8002
+    };
+
+    // Helper to ping a local port with a short timeout
+    async function pingLocalPort(port) {
+      const controller = new AbortController();
+      const id = setTimeout(() => controller.abort(), 250);
       try {
-        const res = await fetch(apiEndpoint);
-        if (!res.ok) throw new Error(`Fetch failed: ${res.status}`);
-        const monitors = await res.json();
-        
-        document.querySelectorAll('.card').forEach(card => {
-          const href = card.getAttribute('href');
-          if (!href) return;
-          
-          // Match monitor URL with card href
+        const response = await fetch(`http://127.0.0.1:${port}/`, {
+          mode: 'no-cors',
+          signal: controller.signal
+        });
+        clearTimeout(id);
+        return true;
+      } catch (err) {
+        clearTimeout(id);
+        return false;
+      }
+    }
+
+    async function syncUptime() {
+      // Fetch remote monitors list from Vercel checkstatus as fallback
+      let monitors = [];
+      try {
+        const res = await fetch("https://checkstatus-eight.vercel.app/api/monitors");
+        if (res.ok) {
+          monitors = await res.json();
+        }
+      } catch (err) {
+        console.warn("Could not fetch remote monitors list:", err);
+      }
+
+      const cards = document.querySelectorAll('.card');
+      for (const card of cards) {
+        const pid = card.getAttribute('data-pid');
+        const href = card.getAttribute('href');
+        let indicator = card.querySelector('.status-indicator');
+
+        if (!indicator) {
+          const numEl = card.querySelector('.card-num');
+          if (numEl) {
+            indicator = document.createElement('span');
+            indicator.className = 'status-indicator';
+            numEl.appendChild(indicator);
+          }
+        }
+
+        if (!indicator) continue;
+
+        // 1. Try Local Port Check First if mapped
+        if (pid && LOCAL_PORTS[pid]) {
+          const localPort = LOCAL_PORTS[pid];
+          const isLocalUp = await pingLocalPort(localPort);
+          if (isLocalUp) {
+            indicator.className = "status-indicator up";
+            indicator.title = `Localhost: Activo (Puerto ${localPort})`;
+            continue; // Skip remote check since local is active!
+          }
+        }
+
+        // 2. Fallback to Remote Monitor Status Check
+        if (href) {
           const match = monitors.find(m => {
             const cleanMUrl = m.url.replace(/\/$/, "").toLowerCase();
             const cleanHref = href.replace(/\/$/, "").toLowerCase();
             return cleanMUrl.includes(cleanHref) || cleanHref.includes(cleanMUrl);
           });
-          
+
           if (match) {
-            let indicator = card.querySelector('.status-indicator');
-            if (!indicator) {
-              const numEl = card.querySelector('.card-num');
-              if (numEl) {
-                indicator = document.createElement('span');
-                indicator.className = 'status-indicator';
-                numEl.appendChild(indicator);
-              }
-            }
-            
-            if (indicator) {
-              const isUp = match.active && match.consecutiveFailures === 0;
-              indicator.className = `status-indicator ${isUp ? 'up' : 'down'}`;
-              indicator.title = isUp 
-                ? `Online · Latencia: ${match.lastLatencyMs || 'N/A'}ms · Estado: ${match.lastStatus || 200}` 
-                : `Offline · Fallos: ${match.consecutiveFailures} · Estado: ${match.lastStatus || 'ERR'}`;
-            }
+            const isUp = match.active && match.consecutiveFailures === 0;
+            indicator.className = `status-indicator ${isUp ? 'up' : 'down'}`;
+            indicator.title = isUp 
+              ? `Online (Producción) · Latencia: ${match.lastLatencyMs || 'N/A'}ms` 
+              : `Offline (Producción) · Estado: ${match.lastStatus || 'ERR'}`;
+          } else {
+            // No local port up, and no remote monitor match
+            indicator.className = "status-indicator";
+            indicator.title = "Estado local y remoto desconocido";
           }
-        });
-      } catch (err) {
-        console.warn("Could not load uptime statuses:", err);
+        }
       }
     }
     
@@ -1306,6 +1355,14 @@
 
     initProjects();
 
+    // Register PWA Service Worker for the portal
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('service-worker.js')
+          .then((reg) => console.log('Portal Service Worker registered successfully.', reg))
+          .catch((err) => console.error('Portal Service Worker registration failed.', err));
+      });
+    }
   </script>
 
 </body>
