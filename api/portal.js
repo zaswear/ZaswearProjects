@@ -13,8 +13,8 @@ export default async function handler(req, res) {
 
   // Aggregation endpoints (configurable via environment variables)
   const CHECKSTATUS_API = process.env.CHECKSTATUS_API || 'https://checkstatus-eight.vercel.app/api/monitors';
-  const GAMECALENDAR_API = process.env.GAMECALENDAR_API || 'https://gamecalendar.vercel.app/api/daily-summary';
-  const RECETARIO_API = process.env.RECETARIO_API || 'https://recetario-zaswear.vercel.app/api/recipes';
+  const GAMECALENDAR_API = process.env.GAMECALENDAR_API || 'https://www.gamecalendar.es/api/daily-summary';
+  const RECETARIO_API = process.env.RECETARIO_API || 'https://recetario-rosy.vercel.app/api/recipes';
   
   // Free public weather API for Utrecht coordinates (latitude 52.0907, longitude 5.1214)
   const WEATHER_API = 'https://api.open-meteo.com/v1/forecast?latitude=52.0907&longitude=5.1214&current_weather=true';
@@ -42,11 +42,14 @@ export default async function handler(req, res) {
       fetchWithTimeout(WEATHER_API)
     ]);
 
+    // Recetario devuelve { recipes: [...] }; aceptamos también un array suelto por robustez.
+    const recipeList = Array.isArray(recipesData) ? recipesData : recipesData?.recipes;
+
     // Construct unified telemetry data model
     const portalTelemetry = {
       uptime: uptimeData || [],
       gamingSummary: dailySummary || null,
-      latestRecipe: recipesData && recipesData.length ? recipesData[0] : null,
+      latestRecipe: Array.isArray(recipeList) && recipeList.length ? recipeList[0] : null,
       weather: weatherData && weatherData.current_weather ? {
         temp: weatherData.current_weather.temperature,
         code: weatherData.current_weather.weathercode,
