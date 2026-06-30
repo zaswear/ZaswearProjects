@@ -11,7 +11,8 @@ export default function Dashboard() {
   const [draft, setDraft] = useState("");
 
   const open = tasks.filter((t) => !t.done);
-  const featured = projects.slice(0, 6);
+  const FEATURED = ["gamecalendar", "directorscut", "weekly-meal-planner", "salud360", "recetario"];
+  const featured = FEATURED.map((id) => projects.find((p) => p.id === id)).filter((p): p is NonNullable<typeof p> => Boolean(p));
 
   const dateStr = now.toLocaleDateString("es-ES", { weekday: "long", day: "numeric", month: "long" });
   const timeStr = now.toLocaleTimeString("es-ES", { hour: "2-digit", minute: "2-digit" });
@@ -37,11 +38,13 @@ export default function Dashboard() {
         <div className="serif dash-clock tnum">{timeStr}</div>
       </header>
 
-      <section className="dash-stats">
-        <Stat value={projects.length} label="proyectos" />
-        <Stat value={categories.length} label="categorías" />
-        <Stat value={open.length} label="tareas abiertas" accent={open.length > 0} />
-      </section>
+      <div className="dash-stats mono">
+        <span><b className="tnum">{projects.length}</b> proyectos</span>
+        <span className="sep">·</span>
+        <span><b className="tnum">{categories.length}</b> categorías</span>
+        <span className="sep">·</span>
+        <span className={open.length ? "hot" : ""}><b className="tnum">{open.length}</b> tareas abiertas</span>
+      </div>
 
       <div className="dash-grid">
         <section>
@@ -87,7 +90,10 @@ export default function Dashboard() {
         .dash-date { font-size: 12px; letter-spacing: .1em; text-transform: uppercase; color: var(--text-dim); }
         .dash-hi { font-size: clamp(30px, 5vw, 46px); line-height: 1.05; margin-top: 4px; }
         .dash-clock { font-size: clamp(30px, 5vw, 46px); color: var(--text-mid); }
-        .dash-stats { display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 30px; }
+        .dash-stats { display: flex; gap: 10px; flex-wrap: wrap; align-items: baseline; margin: -8px 0 26px; font-size: 13px; color: var(--text-dim); }
+        .dash-stats b { color: var(--text-mid); font-weight: 600; }
+        .dash-stats .sep { opacity: .4; }
+        .dash-stats .hot b { color: var(--accent); }
         .dash-grid { display: grid; gap: 28px; grid-template-columns: 1fr; }
         @media (min-width: 940px) { .dash-grid { grid-template-columns: 0.9fr 1.3fr; align-items: start; } }
         .dash-tasks { padding: 16px; }
@@ -105,19 +111,6 @@ export default function Dashboard() {
   );
 }
 
-function Stat({ value, label, accent }: { value: number; label: string; accent?: boolean }) {
-  return (
-    <div className="card-surface stat" style={{ borderColor: accent ? "var(--accent)" : undefined }}>
-      <span className="serif stat-v tnum" style={{ color: accent ? "var(--accent)" : undefined }}>{value}</span>
-      <span className="mono stat-l">{label}</span>
-      <style>{`
-        .stat { display: flex; align-items: baseline; gap: 9px; padding: 12px 18px; }
-        .stat-v { font-size: 30px; line-height: 1; }
-        .stat-l { font-size: 11px; letter-spacing: .1em; text-transform: uppercase; color: var(--text-dim); }
-      `}</style>
-    </div>
-  );
-}
 
 function SecHead({ title, to, cta }: { title: string; to: string; cta: string }) {
   return (
